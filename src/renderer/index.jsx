@@ -25,7 +25,12 @@
  *  });
  * ```
  */
+/* @refresh reload */
+import { render } from 'solid-js/web'
 
-import './index.css';
+import './index.css'
+import App from './App'
 
-console.log('👋 This message is being logged by "renderer.js", included via Vite');
+const root = document.getElementById('root')
+
+render(() => <App />, root)
