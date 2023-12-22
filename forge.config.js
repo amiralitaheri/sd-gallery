@@ -28,7 +28,7 @@ module.exports = {
         build: [
           {
             // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
-            entry: ["src/main/main.js", "src/main/handlers.js"],
+            entry: "src/main/main.js",
             config: "vite.main.config.mjs",
           },
           {
