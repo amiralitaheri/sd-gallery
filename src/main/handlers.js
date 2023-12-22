@@ -1,6 +1,6 @@
 import { BrowserWindow, dialog, ipcMain } from "electron";
 import { stat, readdir } from "fs/promises";
-import { basename, dirname, join } from "path";
+import { basename, join } from "path";
 import { getMetadata } from "./metadata";
 import { Models } from "./database/models";
 import { Samplers } from "./database/samplers";
@@ -8,20 +8,6 @@ import { Vaes } from "./database/vaes";
 import { Directories } from "./database/directories";
 import { Addons } from "./database/addons";
 import { Images } from "./database/images";
-
-const getDateModified = async (path) => {
-  const stats = await stat(path);
-  console.log(stats);
-  return stats.mtimeMs;
-};
-
-const processImportDirectory = async (path) => {
-  if (checkIfAlreadyImported(path)) {
-    return;
-  }
-  await createRootDirectory();
-  await processFilesInDirectory();
-};
 
 const handleImportDirectory = async (event) => {
   const webContents = event.sender;
