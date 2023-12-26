@@ -21,11 +21,11 @@ export async function getMetadata(file) {
       exif.userComment = Int32Array.from(exif.UserComment);
     }
 
-    let metadata = {};
+    let metadata = tags || {};
     try {
       const { parse } =
         Object.values(parsers).find((x) => x.canParse(exif)) ?? {};
-      if (parse) metadata = parse(exif);
+      if (parse) metadata = { ...metadata, ...parse(exif) };
     } catch (e) {
       console.error("Error parsing metadata", e);
     }
