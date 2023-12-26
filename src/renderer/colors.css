@@ -1,0 +1,16 @@
+:root {
+  --color-text-1: rgba(255, 255, 255, 0.87);
+  --color-text-2: rgba(255, 255, 255, 0.7);
+  --color-border: rgba(255, 255, 255, 0.3);
+  --color-background-1: #111;
+  --color-background-2: #191919;
+  --color-primary: #4cc2ff;
+  --color-secoundary: #904deb;
+  --color-red: #8e0024;
+  --color-green: #368900;
+  --color-yellow: #ffc300;
+}
+
+@media (prefers-color-scheme: light) {
+  --color-text-1: rgba(0, 0, 0, 0.87);
+}
