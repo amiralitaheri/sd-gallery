@@ -4,15 +4,7 @@ const insertDirectoryQuery = db.prepare(
   "INSERT INTO directory (name, path, isRoot) VALUES (@name, @path, @isRoot)",
 );
 const deleteDirectoryQuery = db.prepare("DELETE FROM directory where id = @id");
-
-const insertDirectory = ({ name, path, isRoot }) => {
-  const result = insertDirectoryQuery.run({ name, path, isRoot });
-  return result.lastInsertRowid;
-};
-const deleteDirectory = (id) => {
-  deleteDirectoryQuery.run({ id });
-  //   TODO: Delete subdirectories
-};
+const selectAllDirectoryQuery = db.prepare("SELECT * FROM directory");
 
 export class Directories {
   constructor() {
@@ -20,8 +12,6 @@ export class Directories {
     if (Directories.instance) {
       return Directories.instance;
     }
-
-    this._modelsNameToIdMap = new Map();
 
     // Save the instance in a static property
     Directories.instance = this;
@@ -31,23 +21,46 @@ export class Directories {
   }
 
   addDirectory({ name, path, isRoot }) {
-    if (!this._modelsNameToIdMap.has(path)) {
-      const id = insertDirectory({ name, path, isRoot: isRoot ? 1 : 0 });
-      this._modelsNameToIdMap.set(name, id);
-      return id;
+    if (true) {
+      // TODO: Check if already imported
+      const result = insertDirectoryQuery.run({
+        name,
+        path,
+        isRoot: isRoot ? 1 : 0,
+      });
+      return result.lastInsertRowid;
+    } else {
+      throw new Error("This directory is already imported.");
     }
-    return this._modelsNameToIdMap.has(path);
   }
 
-  removeDirectory({ name, hash }) {
-    if (this._modelsNameToIdMap.has(name)) {
-      deleteModel(this._modelsNameToIdMap.get(name));
-      return true;
-    }
-    return false;
-  }
-
-  getDirectoriesTree({ name, hash }) {
+  removeDirectory({ id, path }) {
     // TODO
+    "DELETE from directory where path like '@path%'";
+    "DELETE from images where rootDirectoryId=@id";
+    // Should I delete models, addons , etc?
+  }
+
+  getDirectoriesTree() {
+    const rows = selectAllDirectoryQuery.all();
+    const directoriesTree = [];
+
+    const insertToTree = (row, treeNode) => {
+      const parent = treeNode.find((directory) =>
+        row.path.startsWith(directory.path),
+      );
+      if (parent) {
+        parent.children = parent.children || [];
+        insertToTree(row, parent.children);
+      } else {
+        treeNode.push(row);
+      }
+    };
+
+    for (const row of rows) {
+      insertToTree(row, directoriesTree);
+    }
+
+    return directoriesTree;
   }
 }

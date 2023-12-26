@@ -8,6 +8,8 @@ import { Vaes } from "./database/vaes";
 import { Directories } from "./database/directories";
 import { Addons } from "./database/addons";
 import { Images } from "./database/images";
+const isImage = (name) =>
+  /\.(apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)$/gi.test(name);
 
 const handleImportDirectory = async (event) => {
   const webContents = event.sender;
@@ -19,7 +21,8 @@ const handleImportDirectory = async (event) => {
   return await processFilesInDirectory(dir[0]);
 };
 
-const processFilesInDirectory = async (path) => {
+const processFilesInDirectory = async (path, rootId = null) => {
+  let counter = 0;
   const models = new Models();
   const samplers = new Samplers();
   const vaes = new Vaes();
@@ -31,23 +34,27 @@ const processFilesInDirectory = async (path) => {
     withFileTypes: true,
     recursive: false, // TODO: Upgrade node js or use another method for recursive
   });
+  console.log(`Len = ${entities.length}`);
   const rootDirectoryId = directories.addDirectory({
     name: basename(path),
     path,
-    isRoot: true,
+    isRoot: !!rootId,
   });
-  console.log(`Len = ${entities.length}`);
   for (const entity of entities) {
     const entityPath = join(path, entity.name);
     console.log({ entity, entityPath });
 
     if (entity.isDirectory()) {
-      directories.addDirectory({
-        name: entity.name,
-        path: entityPath,
-        isRoot: false,
-      });
+      counter += processFilesInDirectory(entityPath, rootId || rootDirectoryId);
+      // directories.addDirectory({
+      //   name: entity.name,
+      //   path: entityPath,
+      //   isRoot: false,
+      // });
     } else if (entity.isFile()) {
+      if (!isImage(entity.name)) {
+        continue;
+      }
       const stats = await stat(entityPath);
       console.log(stats);
 
@@ -78,8 +85,8 @@ const processFilesInDirectory = async (path) => {
         isNsfw: false, // TODO
         fileSize: stats.size,
         fileExtension: entity.name.split(".").at(-1).toLowerCase(),
-        width: Number(metadata.Size.split("x")[0]),
-        height: Number(metadata.Size.split("x")[1]),
+        width: Number(metadata["Image Width"].value),
+        height: Number(metadata["Image Height"].value),
         cfgScale: Number(metadata.cfgScale),
         steps: Number(metadata.steps),
         path: entityPath,
@@ -88,8 +95,9 @@ const processFilesInDirectory = async (path) => {
         modelId,
         sampler,
         vaeId,
-        rootDirectoryId,
+        rootDirectoryId: rootId || rootDirectoryId,
       });
+      counter++;
 
       if (metadata.resources) {
         for (const resource of metadata.resources) {
@@ -109,6 +117,7 @@ const processFilesInDirectory = async (path) => {
       }
     }
   }
+  return counter;
 };
 
 /**
@@ -151,6 +160,11 @@ const handleGetVaeId = (vaeName) => {
   //TODO
 };
 
+const handleGetDirectories = () => {
+  const directories = new Directories();
+  return directories.getDirectoriesTree();
+};
+
 const handleSetImageRating = ({ imageId, rating }) => {
   const images = new Images();
   images.setRating({ imageId, rating });
@@ -170,4 +184,5 @@ export const addHandlers = () => {
   ipcMain.handle("getModelsList", handleGetModelsList);
   ipcMain.handle("setImageRating", handleSetImageRating);
   ipcMain.handle("setImageNsfw", handleSetImageNsfw);
+  ipcMain.handle("getDirectories", handleGetDirectories);
 };
