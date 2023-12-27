@@ -49,7 +49,23 @@ const getImageAddonsQuery = db.prepare(
   "SELECT name, type, value FROM image_addon JOIN addon where imageId = @imageId",
 );
 
-const selectAllImageQuery = db.prepare("SELECT * From image");
+const selectAllImageQueryAsc = db.prepare(
+  "SELECT * From image " +
+    "WHERE modelId=@modelId OR @modelId IS NULL AND" +
+    " isNsfw=@isNsfw OR @isNsfw IS NULL AND" +
+    " prompt like @promptLike OR @promptLike IS NULL AND" +
+    " path like @directoryPathLike OR @directoryPathLike IS NULL" +
+    " ORDER BY @sortKey ASC;",
+);
+
+const selectAllImageQueryDesc = db.prepare(
+  "SELECT * From image " +
+    "WHERE modelId=@modelId OR @modelId IS NULL AND" +
+    " isNsfw=@isNsfw OR @isNsfw IS NULL AND" +
+    " prompt like @promptLike OR @promptLike IS NULL AND" +
+    " path like @directoryPathLike OR @directoryPathLike IS NULL" +
+    " ORDER BY @sortKey DESC;",
+);
 
 const updateImageRatingQuery = db.prepare(
   "UPDATE image set rating = @rating where id = @imageId",
@@ -136,8 +152,25 @@ export class Images {
   removeImage(id) {
     deleteImageQuery.run({ id });
   }
-  getImages() {
-    return selectAllImageQuery.all();
+
+  getImages({ filter, sort, directoryPath }) {
+    if (sort?.direction === "desc") {
+      return selectAllImageQueryDesc.all({
+        modelId: filter?.modelId,
+        isNsfw:
+          filter?.isNsfw === false ? 0 : filter?.isNsfw === true ? 1 : null,
+        promptLike: filter?.search && filter?.search + "%",
+        directoryPathLike: directoryPath && directoryPath + "%",
+        sortKey: sort?.key || "id",
+      });
+    }
+    return selectAllImageQueryAsc.all({
+      modelId: filter?.modelId,
+      isNsfw: filter?.isNsfw === false ? 0 : filter?.isNsfw === true ? 1 : null,
+      promptLike: filter?.search && filter?.search + "%",
+      directoryPathLike: directoryPath && directoryPath + "%",
+      sortKey: sort?.key || "id",
+    });
   }
 
   getImageAddons(imageId) {
