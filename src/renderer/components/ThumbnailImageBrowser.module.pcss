@@ -1,0 +1,42 @@
+.container {
+  padding: 8px;
+  height: 0;
+  flex-grow: 1;
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  gap: 4px;
+  height: fit-content;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: var(--color-hover);
+    cursor: pointer;
+  }
+  img {
+    object-fit: contain;
+    width: 200px;
+    height: 200px;
+  }
+  span {
+    text-align: center;
+    width: 200px;
+    word-break: break-all;
+    font-size: 0.75rem;
+  }
+
+  &.selected {
+    border: 1px solid var(--color-primary);
+    span {
+      color: var(--color-primary);
+    }
+  }
+}
