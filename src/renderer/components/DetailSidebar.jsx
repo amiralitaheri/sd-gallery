@@ -1,5 +1,6 @@
 import { selectedImage } from "../states/selectedImageSignal";
 import styles from "./DetailSidebar.module.pcss";
+import { humanFileSize } from "../utils";
 
 // TODO: Add addons, rating, model name, isNsfw
 
@@ -43,6 +44,20 @@ const DetailSidebar = (props) => {
               <span>
                 {new Date(selectedImage().ctimeMs).toLocaleString() || "-"}
               </span>
+            </div>
+            <div>
+              <span>Size</span>
+              <span>{humanFileSize(selectedImage()?.fileSize)}</span>
+            </div>
+            <div class={styles.row}>
+              <div>
+                <span>Width</span>
+                <span>{selectedImage().width || "-"}px</span>
+              </div>
+              <div>
+                <span>Height</span>
+                <span>{selectedImage().height || "-"}px</span>
+              </div>
             </div>
           </div>
         ) : (

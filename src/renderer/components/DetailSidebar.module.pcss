@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  & > div {
+  div {
     display: flex;
     flex-direction: column;
     & > span:first-child {
@@ -32,5 +32,17 @@
   img {
     width: 100%;
     object-fit: contain;
+  }
+}
+
+.row {
+  display: flex;
+  flex-direction: row !important;
+  width: 100%;
+  gap: 8px;
+
+  & > * {
+    flex: 1;
+    gap: 8px;
   }
 }
