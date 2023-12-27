@@ -2,6 +2,7 @@ import styles from "./Header.module.pcss";
 import { cn } from "../utils";
 import { toggleShowDetails } from "../states/showDetailsSignal";
 import { updateFoldersTree } from "../states/foldersStore";
+import { AddIcon, LayoutSidebarIcon, RestartIcon } from "./icons";
 
 const Header = (props) => {
   return (
@@ -13,12 +14,18 @@ const Header = (props) => {
             await updateFoldersTree();
           }}
         >
-          import
+          <AddIcon /> Import
         </button>
-        <button>sync</button>
+        <button>
+          <RestartIcon />
+          Sync
+        </button>
       </div>
       <div>
-        <button onClick={() => toggleShowDetails()}>details</button>
+        <button onClick={() => toggleShowDetails()}>
+          <LayoutSidebarIcon />
+          Details
+        </button>
       </div>
     </div>
   );
