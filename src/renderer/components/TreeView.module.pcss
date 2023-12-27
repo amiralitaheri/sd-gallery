@@ -1,0 +1,38 @@
+.branch {
+  & > ul {
+    display: none;
+  }
+
+  &.expanded {
+    & > ul {
+      display: block;
+    }
+  }
+}
+
+.leaf {
+}
+
+.label {
+  display: flex;
+  gap: 2px;
+  cursor: pointer;
+  &:hover {
+    background: var(--color-border);
+  }
+  button {
+    background: none;
+    border: none;
+  }
+}
+
+.treeView {
+  &,
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  ul li {
+    padding: 4px 4px 4px 40px;
+  }
+}
