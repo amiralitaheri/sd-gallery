@@ -123,14 +123,14 @@ const processFilesInDirectory = async (path, rootId = null) => {
 /**
  * @param {("model"|"vae"|"seed"|"prompt"|"sampler")} [groupBy]
  * @param {modelId: number, search: string, isNsfw: boolean} [filter]
- * @param {{key: ("ctimeMs"|"name"|"fileSize"|"rating"|"cfgScale"|"steps"), direction: ("asc" | "des")}} [sort]
- * @param {number} [directoryId]
+ * @param {{key: ("ctimeMs"|"name"|"fileSize"|"rating"|"cfgScale"|"steps"), direction: ("asc" | "desc")}} [sort]
+ * @param {string} [directoryPath]
  * @returns {*}
  */
-const handleListFiles = ({ groupBy, filter, sort, directoryId }) => {
+const handleListFiles = ({ groupBy, filter, sort, directoryPath }) => {
   // TODO
   const images = new Images();
-  return images.getImages();
+  return images.getImages({ groupBy, filter, sort, directoryPath });
 };
 
 const handleGetImageAddons = (imageId) => {
@@ -178,7 +178,7 @@ const handleSetImageNsfw = ({ imageId, isNsfw }) => {
 console.log(process.versions);
 
 export const addHandlers = () => {
-  ipcMain.handle("listFiles", handleListFiles);
+  ipcMain.handle("listFiles", (event, args) => handleListFiles(args));
   ipcMain.handle("importDirectory", handleImportDirectory);
   ipcMain.handle("getImageAddons", handleGetImageAddons);
   ipcMain.handle("getModelsList", handleGetModelsList);
