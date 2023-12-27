@@ -7,10 +7,11 @@
     & > ul {
       display: block;
     }
-  }
-}
 
-.leaf {
+    button {
+      transform: rotate(90deg);
+    }
+  }
 }
 
 .label {
@@ -23,6 +24,12 @@
   button {
     background: none;
     border: none;
+    display: flex;
+    align-items: center;
+    &:hover {
+      filter: brightness(0.2);
+      cursor: pointer;
+    }
   }
 }
 
@@ -33,6 +40,9 @@
     padding: 0;
   }
   ul li {
-    padding: 4px 4px 4px 40px;
+    padding: 4px 4px 4px 16px;
   }
+}
+.hidden {
+  visibility: hidden;
 }

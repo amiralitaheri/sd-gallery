@@ -2,6 +2,7 @@ import { createSignal, For } from "solid-js";
 import styles from "./TreeView.module.pcss";
 import { cn } from "../utils";
 import { setSelectedDirectory, updateImages } from "../states/imagesStore";
+import { ChevronRightIcon } from "./icons";
 
 const Node = (props) => {
   const [expanded, setExpanded] = createSignal(false);
@@ -15,16 +16,15 @@ const Node = (props) => {
           updateImages();
         }}
       >
-        {props.children && (
-          <button
-            onClick={(event) => {
-              event.stopPropagation();
-              setExpanded((prev) => !prev);
-            }}
-          >
-            {expanded() ? "🔽" : "▶️"}
-          </button>
-        )}
+        <button
+          class={cn(!props.children && styles.hidden)}
+          onClick={(event) => {
+            event.stopPropagation();
+            setExpanded((prev) => !prev);
+          }}
+        >
+          <ChevronRightIcon />
+        </button>
 
         <span>{props.name}</span>
       </div>
