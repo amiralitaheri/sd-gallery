@@ -66,13 +66,6 @@ export class Images {
       return Images.instance;
     }
 
-    this._imagesNameToIdMap = new Map();
-
-    const rows = selectAllImageQuery.all();
-    for (const row of rows) {
-      this._imagesNameToIdMap.set(row.id, row.name);
-    }
-
     // Save the instance in a static property
     Images.instance = this;
 
