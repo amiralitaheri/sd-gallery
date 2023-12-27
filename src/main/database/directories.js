@@ -1,4 +1,5 @@
 import { db } from "./index";
+import { dirname } from "path";
 
 const insertDirectoryQuery = db.prepare(
   "INSERT INTO directory (name, path, isRoot) VALUES (@name, @path, @isRoot)",
@@ -46,8 +47,9 @@ export class Directories {
     const directoriesTree = [];
 
     const insertToTree = (row, treeNode) => {
-      const parent = treeNode.find((directory) =>
-        row.path.startsWith(directory.path),
+      const directoryName = dirname(row.path);
+      const parent = treeNode.find(
+        (directory) => directoryName === directory.path,
       );
       if (parent) {
         parent.children = parent.children || [];
