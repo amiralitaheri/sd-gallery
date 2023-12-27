@@ -16,6 +16,7 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      webSecurity: false, // TODO: Check other alternatives for loading local resources
     },
   });
 
