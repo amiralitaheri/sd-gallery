@@ -3,8 +3,29 @@
   width: 100%;
   justify-content: space-between;
   padding: 8px;
+  font-size: 0.75rem;
+
+  div {
+    display: flex;
+  }
 
   button {
-    margin: 4px;
+    all: unset;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+
+    &.selected {
+      background-color: var(--color-hover);
+    }
+
+    &:hover {
+      background: var(--color-hover);
+    }
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
   }
 }
