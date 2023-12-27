@@ -87,3 +87,32 @@ export const RestartIcon = () => (
     />
   </svg>
 );
+
+export const ThumbnailsIcon = () => (
+  <svg
+    width="24"
+    height="24"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="M19,18H5c-1.7,0-3-1.3-3-3V5c0-1.7,1.3-3,3-3h14c1.7,0,3,1.3,3,3v10C22,16.7,20.7,18,19,18z M5,4C4.4,4,4,4.4,4,5v10 c0,0.6,0.4,1,1,1h14c0.6,0,1-0.4,1-1V5c0-0.6-0.4-1-1-1H5z" />
+    <path d="M5,22H4c-0.6,0-1-0.4-1-1s0.4-1,1-1h1c0.6,0,1,0.4,1,1S5.6,22,5,22z" />
+    <path d="M10,22H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h1c0.6,0,1,0.4,1,1S10.6,22,10,22z" />
+    <path d="M15,22h-1c-0.6,0-1-0.4-1-1s0.4-1,1-1h1c0.6,0,1,0.4,1,1S15.6,22,15,22z" />
+    <path d="M20,22h-1c-0.6,0-1-0.4-1-1s0.4-1,1-1h1c0.6,0,1,0.4,1,1S20.6,22,20,22z" />
+  </svg>
+);
+
+export const TableIcon = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+  >
+    <path d="M13.5 2h-12l-.5.5v11l.5.5h12l.5-.5v-11l-.5-.5zM2 3h11v1H2V3zm7 4H6V5h3v2zm0 1v2H6V8h3zM2 5h3v2H2V5zm0 3h3v2H2V8zm0 5v-2h3v2H2zm4 0v-2h3v2H6zm7 0h-3v-2h3v2zm0-3h-3V8h3v2zm-3-3V5h3v2h-3z" />
+  </svg>
+);
