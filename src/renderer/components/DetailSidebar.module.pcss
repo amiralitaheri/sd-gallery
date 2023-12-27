@@ -1,0 +1,36 @@
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  & > div {
+    display: flex;
+    flex-direction: column;
+    & > span:first-child {
+    }
+    & > span:last-child {
+      font-family: monospace;
+      padding: 8px;
+      border-radius: 8px;
+      background: var(--color-background-1);
+    }
+  }
+}
+
+.placeHolderText {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 0;
+  overflow: auto;
+  flex-grow: 1;
+  padding: 8px;
+  gap: 8px;
+  img {
+    width: 100%;
+    object-fit: contain;
+  }
+}
