@@ -1,0 +1,37 @@
+.container {
+  padding: 8px;
+  height: 0;
+  flex-grow: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  padding: 8px;
+  gap: 4px;
+  border: 1px solid transparent;
+  height: fit-content;
+  width: 100%;
+
+  &:hover {
+    background: var(--color-hover);
+    cursor: pointer;
+  }
+  span {
+    text-align: center;
+    font-size: 0.9rem;
+    flex: 1;
+    width: 25%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &.selected {
+    border: 1px solid var(--color-primary);
+    span {
+      color: var(--color-primary);
+    }
+  }
+}
