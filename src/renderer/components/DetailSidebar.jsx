@@ -4,7 +4,7 @@ import { humanFileSize } from "../utils";
 import RateInput from "./RateInput";
 import { updateImages } from "../states/imagesStore";
 
-// TODO: Add addons, rating, model name, isNsfw
+// TODO: Add addons, model name, isNsfw
 
 const DetailSidebar = (props) => {
   const updateRating = async (rating) => {
@@ -12,7 +12,6 @@ const DetailSidebar = (props) => {
       imageId: selectedImage().id,
       rating,
     });
-    console.log(updatedImage);
     setSelectedImage(updatedImage);
     updateImages();
   };
@@ -41,16 +40,18 @@ const DetailSidebar = (props) => {
                 <span>{selectedImage().modelId || "-"}</span>
               </div>
               <div>
-                <span>CFG Scale</span>
-                <span>{selectedImage().cfgScale || "-"}</span>
-              </div>
-              <div>
                 <span>Seed</span>
                 <span>{selectedImage().seed || "-"}</span>
               </div>
-              <div>
-                <span>Steps</span>
-                <span>{selectedImage().steps || "-"}</span>
+              <div class={styles.row}>
+                <div>
+                  <span>Steps</span>
+                  <span>{selectedImage().steps || "-"}</span>
+                </div>
+                <div>
+                  <span>CFG Scale</span>
+                  <span>{selectedImage().cfgScale || "-"}</span>
+                </div>
               </div>
               <div>
                 <span>Sampler</span>
