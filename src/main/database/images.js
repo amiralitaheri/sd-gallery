@@ -49,6 +49,8 @@ const getImageAddonsQuery = db.prepare(
   "SELECT name, type, value FROM image_addon JOIN addon where imageId = @imageId",
 );
 
+const getImageById = db.prepare("SELECT * FROM image WHERE id=@id");
+
 const selectAllImageQueryAsc = db.prepare(
   "SELECT * From image " +
     "WHERE modelId=@modelId OR @modelId IS NULL AND" +
@@ -183,6 +185,7 @@ export class Images {
 
   setRating({ imageId, rating }) {
     updateImageRatingQuery.run({ imageId, rating });
+    return getImageById.get({ id: imageId });
   }
 
   setIsNsfw({ imageId, isNsfw }) {

@@ -167,7 +167,7 @@ const handleGetDirectories = () => {
 
 const handleSetImageRating = ({ imageId, rating }) => {
   const images = new Images();
-  images.setRating({ imageId, rating });
+  return images.setRating({ imageId, rating });
 };
 
 const handleSetImageNsfw = ({ imageId, isNsfw }) => {
@@ -182,7 +182,7 @@ export const addHandlers = () => {
   ipcMain.handle("importDirectory", handleImportDirectory);
   ipcMain.handle("getImageAddons", handleGetImageAddons);
   ipcMain.handle("getModelsList", handleGetModelsList);
-  ipcMain.handle("setImageRating", handleSetImageRating);
-  ipcMain.handle("setImageNsfw", handleSetImageNsfw);
+  ipcMain.handle("setImageRating", (event, args) => handleSetImageRating(args));
+  ipcMain.handle("setImageNsfw", (event, args) => handleSetImageNsfw(args));
   ipcMain.handle("getDirectories", handleGetDirectories);
 };
