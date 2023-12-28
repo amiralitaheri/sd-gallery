@@ -38,7 +38,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
   const rootDirectoryId = directories.addDirectory({
     name: basename(path),
     path,
-    isRoot: !!rootId,
+    isRoot: !rootId,
   });
   for (const entity of entities) {
     const entityPath = join(path, entity.name);
