@@ -54,7 +54,7 @@ db.transaction(() => {
             height INTEGER,
             cfgScale REAL,
             steps INTEGER,
-            path TEXT,
+            path TEXT UNIQUE,
             seed INTEGER,
             ctimeMs REAL,
         

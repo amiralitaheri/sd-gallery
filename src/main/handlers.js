@@ -8,6 +8,7 @@ import { Vaes } from "./database/vaes";
 import { Directories } from "./database/directories";
 import { Addons } from "./database/addons";
 import { Images } from "./database/images";
+
 const isImage = (name) =>
   /\.(apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)$/gi.test(name);
 
@@ -78,25 +79,33 @@ const processFilesInDirectory = async (path, rootId = null) => {
         vaeId = vaes.addVae({ name: metadata.VAE, hash: metadata["VAE hash"] });
       }
 
-      const imageId = images.addImage({
-        name: entity.name,
-        prompt: metadata.prompt,
-        negativePrompt: metadata.negativePrompt,
-        isNsfw: false, // TODO
-        fileSize: stats.size,
-        fileExtension: entity.name.split(".").at(-1).toLowerCase(),
-        width: Number(metadata["Image Width"].value),
-        height: Number(metadata["Image Height"].value),
-        cfgScale: Number(metadata.cfgScale),
-        steps: Number(metadata.steps),
-        path: entityPath,
-        seed: Number(metadata.seed),
-        ctimeMs: stats.ctimeMs,
-        modelId,
-        sampler,
-        vaeId,
-        rootDirectoryId: rootId || directoryId,
-      });
+      let imageId;
+
+      try {
+        imageId = images.addImage({
+          name: entity.name,
+          prompt: metadata.prompt,
+          negativePrompt: metadata.negativePrompt,
+          isNsfw: false, // TODO
+          fileSize: stats.size,
+          fileExtension: entity.name.split(".").at(-1).toLowerCase(),
+          width: Number(metadata["Image Width"].value),
+          height: Number(metadata["Image Height"].value),
+          cfgScale: Number(metadata.cfgScale),
+          steps: Number(metadata.steps),
+          path: entityPath,
+          seed: Number(metadata.seed),
+          ctimeMs: stats.ctimeMs,
+          modelId,
+          sampler,
+          vaeId,
+          rootDirectoryId: rootId || directoryId,
+        });
+      } catch (e) {
+        if (e.code === "SQLITE_CONSTRAINT_UNIQUE") {
+          continue;
+        }
+      }
       counter++;
 
       if (metadata.resources) {

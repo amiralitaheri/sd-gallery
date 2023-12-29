@@ -6,6 +6,9 @@ const insertDirectoryQuery = db.prepare(
 );
 const deleteDirectoryQuery = db.prepare("DELETE FROM directory where id = @id");
 const selectAllDirectoryQuery = db.prepare("SELECT * FROM directory");
+const getDirectoryIdByPath = db.prepare(
+  "SELECT id FROM directory WHERE path = @path",
+);
 
 export class Directories {
   constructor() {
@@ -22,8 +25,8 @@ export class Directories {
   }
 
   addDirectory({ name, path, rootDirectoryId }) {
-    if (true) {
-      // TODO: Check if already imported
+    const directory = getDirectoryIdByPath.get({ path });
+    if (!directory?.id) {
       const result = insertDirectoryQuery.run({
         name,
         path,
@@ -32,7 +35,7 @@ export class Directories {
       });
       return result.lastInsertRowid;
     } else {
-      throw new Error("This directory is already imported.");
+      return directory.id;
     }
   }
 
