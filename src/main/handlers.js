@@ -74,12 +74,15 @@ const processFilesInDirectory = async (path, rootId = null) => {
       if (metadata.Model) {
         modelId = models.addModel({
           name: metadata.Model,
-          hash: metadata["Model hash"],
+          hash: metadata["Model hash"] || metadata.hashes?.["model"],
         });
       }
 
       if (metadata.VAE) {
-        vaeId = vaes.addVae({ name: metadata.VAE, hash: metadata["VAE hash"] });
+        vaeId = vaes.addVae({
+          name: metadata.VAE,
+          hash: metadata["VAE hash"] || metadata.hashes?.["vae"],
+        });
       }
 
       let imageId;
@@ -117,6 +120,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
             const addonId = addons.addAddon({
               name: resource.name,
               type: resource.type,
+              hash: metadata.hashes?.[`${resource.type}:${resource.name}`],
             });
 
             images.addAddonRelation({
