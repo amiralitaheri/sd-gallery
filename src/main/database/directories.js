@@ -2,7 +2,7 @@ import { db } from "./index";
 import { dirname } from "path";
 
 const insertDirectoryQuery = db.prepare(
-  "INSERT INTO directory (name, path, isRoot) VALUES (@name, @path, @isRoot)",
+  "INSERT INTO directory (name, path, isRoot, rootDirectoryId) VALUES (@name, @path, @isRoot, @rootDirectoryId)",
 );
 const deleteDirectoryQuery = db.prepare("DELETE FROM directory where id = @id");
 const selectAllDirectoryQuery = db.prepare("SELECT * FROM directory");
@@ -21,13 +21,14 @@ export class Directories {
     return this;
   }
 
-  addDirectory({ name, path, isRoot }) {
+  addDirectory({ name, path, rootDirectoryId }) {
     if (true) {
       // TODO: Check if already imported
       const result = insertDirectoryQuery.run({
         name,
         path,
-        isRoot: isRoot ? 1 : 0,
+        isRoot: rootDirectoryId ? 0 : 1,
+        rootDirectoryId,
       });
       return result.lastInsertRowid;
     } else {
@@ -35,11 +36,9 @@ export class Directories {
     }
   }
 
-  removeDirectory({ id, path }) {
-    // TODO
-    "DELETE from directory where path like '@path%'";
-    "DELETE from images where rootDirectoryId=@id";
-    // Should I delete models, addons , etc?
+  removeDirectory(id) {
+    deleteDirectoryQuery.run({ id });
+    // Should I delete models, addons , vaes
   }
 
   getDirectoriesTree() {

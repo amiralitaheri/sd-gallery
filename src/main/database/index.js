@@ -4,6 +4,8 @@ import { join } from "path";
 export const db = new Database(join(__dirname, "/database_v1.db"));
 db.transaction(() => {
   db.exec(`
+        PRAGMA foreign_keys = ON;
+        
         CREATE TABLE IF NOT EXISTS model (
             id INTEGER PRIMARY KEY,
             name TEXT,
@@ -15,11 +17,13 @@ db.transaction(() => {
             id INTEGER PRIMARY KEY,
             name TEXT,
             path TEXT,
-            isRoot INTEGER
+            isRoot INTEGER,
+            rootDirectoryId INTEGER,
+            FOREIGN KEY (rootDirectoryId) REFERENCES directory(id) ON DELETE CASCADE
         );
     
         CREATE TABLE IF NOT EXISTS sampler (
-            name TEXT UNIQUE
+            name TEXT PRIMARY KEY
         );
         
         CREATE TABLE IF NOT EXISTS vae (
@@ -59,10 +63,10 @@ db.transaction(() => {
             modelId INTEGER,
             sampler TEXT,
             vaeId INTEGER,
-            FOREIGN KEY (rootDirectoryId) REFERENCES directory(id),
-            FOREIGN KEY (modelId) REFERENCES model(id),
-            FOREIGN KEY (sampler) REFERENCES sampler(name)
-            FOREIGN KEY (vaeId) REFERENCES vae(id)
+            FOREIGN KEY (rootDirectoryId) REFERENCES directory(id) ON DELETE CASCADE,
+            FOREIGN KEY (modelId) REFERENCES model(id) ON DELETE CASCADE,
+            FOREIGN KEY (sampler) REFERENCES sampler(name) ON DELETE CASCADE,
+            FOREIGN KEY (vaeId) REFERENCES vae(id) ON DELETE CASCADE
         );
     
         CREATE TABLE IF NOT EXISTS image_addon (
@@ -70,8 +74,8 @@ db.transaction(() => {
             addonId INTEGER,
             value REAL,
             PRIMARY KEY (imageId, addonId),
-            FOREIGN KEY (imageId) REFERENCES image(id),
-            FOREIGN KEY (addonId) REFERENCES addon(id)
+            FOREIGN KEY (imageId) REFERENCES image(id) ON DELETE CASCADE,
+            FOREIGN KEY (addonId) REFERENCES addon(id) ON DELETE CASCADE
         );
         `);
 })();

@@ -35,17 +35,17 @@ const processFilesInDirectory = async (path, rootId = null) => {
     recursive: false, // TODO: Upgrade node js or use another method for recursive
   });
   console.log(`Len = ${entities.length}`);
-  const rootDirectoryId = directories.addDirectory({
+  const directoryId = directories.addDirectory({
     name: basename(path),
     path,
-    isRoot: !rootId,
+    rootDirectoryId: rootId,
   });
   for (const entity of entities) {
     const entityPath = join(path, entity.name);
     console.log({ entity, entityPath });
 
     if (entity.isDirectory()) {
-      counter += processFilesInDirectory(entityPath, rootId || rootDirectoryId);
+      counter += processFilesInDirectory(entityPath, rootId || directoryId);
       // directories.addDirectory({
       //   name: entity.name,
       //   path: entityPath,
@@ -95,7 +95,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
         modelId,
         sampler,
         vaeId,
-        rootDirectoryId: rootId || rootDirectoryId,
+        rootDirectoryId: rootId || directoryId,
       });
       counter++;
 
@@ -118,6 +118,11 @@ const processFilesInDirectory = async (path, rootId = null) => {
     }
   }
   return counter;
+};
+
+const handleDeleteDirectory = (id) => {
+  const directories = new Directories();
+  directories.removeDirectory(id);
 };
 
 /**
@@ -185,4 +190,7 @@ export const addHandlers = () => {
   ipcMain.handle("setImageRating", (event, args) => handleSetImageRating(args));
   ipcMain.handle("setImageNsfw", (event, args) => handleSetImageNsfw(args));
   ipcMain.handle("getDirectories", handleGetDirectories);
+  ipcMain.handle("deleteDirectory", (event, args) =>
+    handleDeleteDirectory(args),
+  );
 };
