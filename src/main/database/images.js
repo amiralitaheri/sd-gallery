@@ -1,4 +1,5 @@
 import { db } from "./index";
+import * as fs from "fs";
 
 const insertImageQuery = db.prepare(
   `INSERT INTO image (
@@ -50,6 +51,10 @@ const getImageAddonsQuery = db.prepare(
 );
 
 const getImageById = db.prepare("SELECT * FROM image WHERE id=@id");
+
+const getImagesByRootDirectoryIdQuery = db.prepare(
+  "SELECT id, path FROM image WHERE rootDirectoryId = @rootDirectoryId",
+);
 
 const selectAllImageQueryAsc = db.prepare(
   "SELECT * From image " +
@@ -190,5 +195,17 @@ export class Images {
 
   setIsNsfw({ imageId, isNsfw }) {
     updateImageIsNsfwQuery.run({ imageId, isNsfw: isNsfw ? 1 : 0 });
+  }
+
+  removeDeletedImagesFromDirectory(rootDirectoryId) {
+    const images = getImagesByRootDirectoryIdQuery.all({ rootDirectoryId });
+    let counter = 0;
+    for (const image of images) {
+      if (!fs.existsSync(image.path)) {
+        deleteImageQuery.run({ id: image.id });
+        counter++;
+      }
+    }
+    return counter;
   }
 }

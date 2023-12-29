@@ -137,27 +137,31 @@ const handleDeleteDirectory = (id) => {
   directories.removeDirectory(id);
 };
 
+const removeDeletedImagesFromDirectory = (rootDirectoryId) => {};
+
 /**
- * @param {number} id
+ * @param {number} rootDirectoryId
  * @returns {Promise<{deleted: number, added: number}>}
  */
-const syncDirectory = async (id) => {
+const syncDirectory = async (rootDirectoryId) => {
   const directories = new Directories();
+  const images = new Images();
+  const deleted = images.removeDeletedImagesFromDirectory(rootDirectoryId);
+
   const added = await processFilesInDirectory(
-    directories.getDirectoryPathById(id),
+    directories.getDirectoryPathById(rootDirectoryId),
   );
-  const deleted = 0;
 
   return { added, deleted };
 };
 
 /**
- * @param {number} [id]
+ * @param {number} [rootDirectoryId]
  * @returns {Promise<{deleted: number, added: number}>}
  */
-const handleSyncDirectories = async (id) => {
-  if (id) {
-    return syncDirectory(id);
+const handleSyncDirectories = async (rootDirectoryId) => {
+  if (rootDirectoryId) {
+    return syncDirectory(rootDirectoryId);
   }
   let added = 0,
     deleted = 0;
