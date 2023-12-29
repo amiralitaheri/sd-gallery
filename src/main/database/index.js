@@ -9,8 +9,7 @@ db.transaction(() => {
         CREATE TABLE IF NOT EXISTS model (
             id INTEGER PRIMARY KEY,
             name TEXT,
-            hash TEXT,
-            civitId TEXT
+            hash TEXT
         );
         
         CREATE TABLE IF NOT EXISTS directory (
@@ -29,16 +28,14 @@ db.transaction(() => {
         CREATE TABLE IF NOT EXISTS vae (
             id INTEGER PRIMARY KEY,
             name TEXT,
-            hash TEXT,
-            civitId TEXT
+            hash TEXT
         );
     
         CREATE TABLE IF NOT EXISTS addon (
             id INTEGER PRIMARY KEY,
             name TEXT,
             hash TEXT,
-            type TEXT,
-            civitId TEXT
+            type TEXT
         );
     
         CREATE TABLE IF NOT EXISTS image (
