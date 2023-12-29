@@ -46,7 +46,10 @@ const processFilesInDirectory = async (path, rootId = null) => {
     console.log({ entity, entityPath });
 
     if (entity.isDirectory()) {
-      counter += processFilesInDirectory(entityPath, rootId || directoryId);
+      counter += await processFilesInDirectory(
+        entityPath,
+        rootId || directoryId,
+      );
       // directories.addDirectory({
       //   name: entity.name,
       //   path: entityPath,
