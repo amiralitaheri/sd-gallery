@@ -6,8 +6,16 @@ const insertDirectoryQuery = db.prepare(
 );
 const deleteDirectoryQuery = db.prepare("DELETE FROM directory where id = @id");
 const selectAllDirectoryQuery = db.prepare("SELECT * FROM directory");
-const getDirectoryIdByPath = db.prepare(
-  "SELECT id FROM directory WHERE path = @path",
+const getDirectoryByPathQuery = db.prepare(
+  "SELECT * FROM directory WHERE path = @path",
+);
+
+const getDirectoryByIdQuery = db.prepare(
+  "SELECT * FROM directory WHERE id = @id",
+);
+
+const getRootDirectoriesQuery = db.prepare(
+  "SELECT * FROM directory WHERE isRoot = 1",
 );
 
 export class Directories {
@@ -25,7 +33,7 @@ export class Directories {
   }
 
   addDirectory({ name, path, rootDirectoryId }) {
-    const directory = getDirectoryIdByPath.get({ path });
+    const directory = getDirectoryByPathQuery.get({ path });
     if (!directory?.id) {
       const result = insertDirectoryQuery.run({
         name,
@@ -37,6 +45,15 @@ export class Directories {
     } else {
       return directory.id;
     }
+  }
+
+  getDirectoryPathById(id) {
+    const directory = getDirectoryByIdQuery.get({ id });
+    return directory?.path;
+  }
+
+  getRootDirectories() {
+    return getRootDirectoriesQuery.all();
   }
 
   removeDirectory(id) {

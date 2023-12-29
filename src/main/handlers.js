@@ -135,6 +135,42 @@ const handleDeleteDirectory = (id) => {
 };
 
 /**
+ * @param {number} id
+ * @returns {Promise<{deleted: number, added: number}>}
+ */
+const syncDirectory = async (id) => {
+  const directories = new Directories();
+  const added = await processFilesInDirectory(
+    directories.getDirectoryPathById(id),
+  );
+  const deleted = 0;
+
+  return { added, deleted };
+};
+
+/**
+ * @param {number} [id]
+ * @returns {Promise<{deleted: number, added: number}>}
+ */
+const handleSyncDirectories = async (id) => {
+  if (id) {
+    return syncDirectory(id);
+  }
+  let added = 0,
+    deleted = 0;
+
+  const rootDirectories = new Directories().getRootDirectories();
+
+  for (const directory of rootDirectories) {
+    const result = await syncDirectory(directory.id);
+    added += result.added;
+    deleted += result.deleted;
+  }
+
+  return { added, deleted };
+};
+
+/**
  * @param {("model"|"vae"|"seed"|"prompt"|"sampler")} [groupBy]
  * @param {modelId: number, search: string, isNsfw: boolean} [filter]
  * @param {{key: ("ctimeMs"|"name"|"fileSize"|"rating"|"cfgScale"|"steps"), direction: ("asc" | "desc")}} [sort]
@@ -201,5 +237,8 @@ export const addHandlers = () => {
   ipcMain.handle("getDirectories", handleGetDirectories);
   ipcMain.handle("deleteDirectory", (event, args) =>
     handleDeleteDirectory(args),
+  );
+  ipcMain.handle("syncDirectories", (event, args) =>
+    handleSyncDirectories(args),
   );
 };
