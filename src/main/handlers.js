@@ -91,7 +91,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
           negativePrompt: metadata.negativePrompt,
           isNsfw: false, // TODO
           fileSize: stats.size,
-          fileExtension: entity.name.split(".").at(-1).toLowerCase(),
+          fileExtension: metadata.FileType.value,
           width: Number(metadata["Image Width"].value),
           height: Number(metadata["Image Height"].value),
           cfgScale: Number(metadata.cfgScale),
