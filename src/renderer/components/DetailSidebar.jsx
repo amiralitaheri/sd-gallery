@@ -3,8 +3,9 @@ import styles from "./DetailSidebar.module.pcss";
 import { humanFileSize } from "../utils";
 import RateInput from "./RateInput";
 import { updateImages } from "../states/imagesStore";
+import { getModelNameById } from "../states/modelsStore";
 
-// TODO: Add addons, model name, isNsfw
+// TODO: Add addons, isNsfw
 
 const DetailSidebar = (props) => {
   const updateRating = async (rating) => {
@@ -37,7 +38,11 @@ const DetailSidebar = (props) => {
               </div>
               <div>
                 <span>Model</span>
-                <span>{selectedImage().modelId || "-"}</span>
+                <span>
+                  {getModelNameById(selectedImage().modelId) ||
+                    selectedImage().modelId ||
+                    "-"}
+                </span>
               </div>
               <div>
                 <span>Seed</span>

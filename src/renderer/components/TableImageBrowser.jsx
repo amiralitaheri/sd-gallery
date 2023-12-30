@@ -4,6 +4,7 @@ import styles from "./TableImageBrowser.module.pcss";
 import { cn, humanFileSize } from "../utils";
 import { selectedImage, setSelectedImage } from "../states/selectedImageSignal";
 import { showNsfw } from "../states/showNsfwSignal";
+import { getModelNameById } from "../states/modelsStore";
 
 const TableImageBrowser = (props) => {
   return (
@@ -30,7 +31,9 @@ const TableImageBrowser = (props) => {
             onClick={() => setSelectedImage(image)}
           >
             <span>{image.name}</span>
-            <span>{image.modelId || "-"}</span>
+            <span>
+              {getModelNameById(image.modelId) || image.modelId || "-"}
+            </span>
             <span>{new Date(image.ctimeMs).toLocaleString()}</span>
             <span>{humanFileSize(image.fileSize)}</span>
           </div>
