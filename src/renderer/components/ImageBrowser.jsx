@@ -8,7 +8,7 @@ import TableImageBrowser from "./TableImageBrowser";
 const ImageBrowser = (props) => {
   return (
     <div class={cn(props.class, styles.container)}>
-      <FilterInput />
+      <FilterInput class={styles.filter} />
       {viewType() === "thumbnail" && <ThumbnailImageBrowser />}
       {viewType() === "table" && <TableImageBrowser />}
     </div>

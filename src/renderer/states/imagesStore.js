@@ -12,8 +12,11 @@ const setSelectedDirectory = (directoryPath) => {
 };
 
 const updateImages = async () => {
+  console.log(state.params);
   setState("loading", true);
-  const images = await window.sdGalleryApi.listFiles({ ...state.params });
+  const images = await window.sdGalleryApi.listFiles(
+    JSON.parse(JSON.stringify(state.params)),
+  );
   console.log(state.params, images);
   setState("images", images);
   setState("loading", false);
@@ -21,4 +24,13 @@ const updateImages = async () => {
 
 updateImages();
 
-export { state as imagesStoreState, setSelectedDirectory, updateImages };
+const updateParams = (params) => {
+  setState("params", (prevState) => ({ ...prevState, ...params }));
+};
+
+export {
+  state as imagesStoreState,
+  setSelectedDirectory,
+  updateImages,
+  updateParams,
+};
