@@ -7,6 +7,8 @@ const deleteModelQuery = db.prepare("DELETE FROM model where id = @id");
 
 const selectAllModelQuery = db.prepare("SELECT * From model");
 
+const selectModelByIdQuery = db.prepare("SELECT * FROM model WHERE id=@id");
+
 const insetModel = ({ name, hash }) => {
   const result = insertModelQuery.run({ name, hash });
   return result.lastInsertRowid;
@@ -56,6 +58,14 @@ export class Models {
 
   getModelId({ name, hash }) {
     return this._modelsNameToIdMap.get(name);
+  }
+
+  getAllModels() {
+    return selectAllModelQuery.all();
+  }
+
+  getModelById(id) {
+    return selectModelByIdQuery.get({ id });
   }
 
   getModelsArray() {

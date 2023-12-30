@@ -204,13 +204,14 @@ const handleGetModelsList = () => {
   models.getModelsArray();
 };
 
-// TODO: Do we need these or should we send a array of objects to frontend including both id, name and maybe hash
-const handleGetModelName = (modelId) => {
-  //TODO
+const handleGetModels = () => {
+  const models = new Models();
+  return models.getAllModels();
 };
 
-const handleGetModelId = (modelName) => {
-  //TODO
+const handleGetModelById = (modelId) => {
+  const models = new Models();
+  return models.getModelById(modelId);
 };
 
 const handleGetVaeName = (vaeId) => {
@@ -246,6 +247,8 @@ export const addHandlers = () => {
   ipcMain.handle("setImageRating", (event, args) => handleSetImageRating(args));
   ipcMain.handle("setImageNsfw", (event, args) => handleSetImageNsfw(args));
   ipcMain.handle("getDirectories", handleGetDirectories);
+  ipcMain.handle("getModels", handleGetModels);
+  ipcMain.handle("getModelById", (event, args) => handleGetModelById(args));
   ipcMain.handle("deleteDirectory", (event, args) =>
     handleDeleteDirectory(args),
   );
