@@ -58,19 +58,19 @@ const getImagesByRootDirectoryIdQuery = db.prepare(
 
 const selectAllImageQueryAsc = db.prepare(
   "SELECT * From image " +
-    "WHERE modelId=@modelId OR @modelId IS NULL AND" +
-    " isNsfw=@isNsfw OR @isNsfw IS NULL AND" +
-    " prompt like @promptLike OR @promptLike IS NULL AND" +
-    " path like @directoryPathLike OR @directoryPathLike IS NULL" +
+    "WHERE (modelId=@modelId OR @modelId IS NULL) AND" +
+    " (isNsfw=@isNsfw OR @isNsfw IS NULL) AND" +
+    " (prompt like @promptLike OR @promptLike IS NULL) AND" +
+    " (path like @directoryPathLike OR @directoryPathLike IS NULL)" +
     " ORDER BY @sortKey ASC;",
 );
 
 const selectAllImageQueryDesc = db.prepare(
   "SELECT * From image " +
     "WHERE modelId=@modelId OR @modelId IS NULL AND" +
-    " isNsfw=@isNsfw OR @isNsfw IS NULL AND" +
-    " prompt like @promptLike OR @promptLike IS NULL AND" +
-    " path like @directoryPathLike OR @directoryPathLike IS NULL" +
+    " (isNsfw=@isNsfw OR @isNsfw IS NULL) AND" +
+    " (prompt like @promptLike OR @promptLike IS NULL) AND" +
+    " (path like @directoryPathLike OR @directoryPathLike IS NULL)" +
     " ORDER BY @sortKey DESC;",
 );
 
@@ -166,7 +166,7 @@ export class Images {
         modelId: filter?.modelId,
         isNsfw:
           filter?.isNsfw === false ? 0 : filter?.isNsfw === true ? 1 : null,
-        promptLike: filter?.search && filter?.search + "%",
+        promptLike: filter?.search && `%${filter.search}%`,
         directoryPathLike: directoryPath && directoryPath + "%",
         sortKey: sort?.key || "id",
       });
@@ -174,7 +174,7 @@ export class Images {
     return selectAllImageQueryAsc.all({
       modelId: filter?.modelId,
       isNsfw: filter?.isNsfw === false ? 0 : filter?.isNsfw === true ? 1 : null,
-      promptLike: filter?.search && filter?.search + "%",
+      promptLike: filter?.search && `%${filter.search}%`,
       directoryPathLike: directoryPath && directoryPath + "%",
       sortKey: sort?.key || "id",
     });
