@@ -47,7 +47,10 @@ const insertAddonRelationQuery = db.prepare(
 );
 
 const getImageAddonsQuery = db.prepare(
-  "SELECT name, type, value FROM image_addon JOIN addon where imageId = @imageId",
+  "SELECT name, type, value, hash\n" +
+    "FROM image_addon\n" +
+    "         LEFT JOIN addon ON addonId = addon.id\n" +
+    "WHERE imageId = @imageId;",
 );
 
 const getImageById = db.prepare("SELECT * FROM image WHERE id=@id");
@@ -167,7 +170,7 @@ export class Images {
         isNsfw:
           filter?.isNsfw === false ? 0 : filter?.isNsfw === true ? 1 : null,
         promptLike: filter?.search && `%${filter.search}%`,
-        directoryPathLike: directoryPath && directoryPath + "%",
+        directoryPathLike: directoryPath && directoryPath + "\\%",
         sortKey: sort?.key || "id",
       });
     }
@@ -175,13 +178,13 @@ export class Images {
       modelId: filter?.modelId,
       isNsfw: filter?.isNsfw === false ? 0 : filter?.isNsfw === true ? 1 : null,
       promptLike: filter?.search && `%${filter.search}%`,
-      directoryPathLike: directoryPath && directoryPath + "%",
+      directoryPathLike: directoryPath && directoryPath + "\\%",
       sortKey: sort?.key || "id",
     });
   }
 
   getImageAddons(imageId) {
-    getImageAddonsQuery.all({ imageId });
+    return getImageAddonsQuery.all({ imageId });
   }
 
   addAddonRelation({ imageId, addonId, value }) {
