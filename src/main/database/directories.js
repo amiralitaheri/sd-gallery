@@ -68,7 +68,7 @@ export class Directories {
     const insertToTree = (row, treeNode) => {
       const directoryName = dirname(row.path);
       const parent = treeNode.find((directory) =>
-        directoryName.startsWith(directory.path),
+        (directoryName + "\\").startsWith(directory.path + "\\"),
       );
       if (parent) {
         parent.children = parent.children || [];
