@@ -117,17 +117,23 @@ const processFilesInDirectory = async (path, rootId = null) => {
       if (metadata.resources) {
         for (const resource of metadata.resources) {
           if (resource.type !== "model") {
-            const addonId = addons.addAddon({
-              name: resource.name,
-              type: resource.type,
-              hash: metadata.hashes?.[`${resource.type}:${resource.name}`],
-            });
+            try {
+              const addonId = addons.addAddon({
+                name: resource.name,
+                type: resource.type,
+                hash: metadata.hashes?.[`${resource.type}:${resource.name}`],
+              });
 
-            images.addAddonRelation({
-              imageId,
-              addonId,
-              value: resource.weight,
-            });
+              images.addAddonRelation({
+                imageId,
+                addonId,
+                value: resource.weight,
+              });
+            } catch (e) {
+              if (e.code !== "SQLITE_CONSTRAINT_PRIMARYKEY") {
+                throw e;
+              }
+            }
           }
         }
       }
