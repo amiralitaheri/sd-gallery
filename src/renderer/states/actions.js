@@ -2,6 +2,7 @@ import { updateFoldersTree } from "./foldersStore";
 import { updateImages } from "./imagesStore";
 import { toast } from "solid-toast";
 import { updateModels } from "./modelsStore";
+import { updateVaes } from "./vaesStore";
 
 // Should the toast message handling be in here or where the method is used?
 
@@ -11,6 +12,7 @@ export const importDirectory = () => {
       const result = await window.sdGalleryApi.importDirectory();
       await updateFoldersTree();
       await updateModels();
+      await updateVaes();
       return result;
     })(),
     {
@@ -28,6 +30,7 @@ export const syncDirectory = () => {
       await updateFoldersTree();
       await updateImages();
       await updateModels();
+      await updateVaes();
       return result;
     })(),
     {

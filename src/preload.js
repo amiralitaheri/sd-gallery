@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld("sdGalleryApi", {
   handleSetImageNsfw: ({ imageId, isNsfw }) =>
     ipcRenderer.invoke("handleSetImageNsfw", { imageId, isNsfw }),
   getDirectories: () => ipcRenderer.invoke("getDirectories"),
+  getVaes: () => ipcRenderer.invoke("getVaes"),
   getModels: () => ipcRenderer.invoke("getModels"),
   getModelById: (id) => ipcRenderer.invoke("getModelById", id),
   syncDirectories: (id) => ipcRenderer.invoke("syncDirectories", id),

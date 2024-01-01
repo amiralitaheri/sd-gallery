@@ -214,8 +214,9 @@ const handleGetModelById = (modelId) => {
   return models.getModelById(modelId);
 };
 
-const handleGetVaeName = (vaeId) => {
-  //TODO
+const handleGetVaes = () => {
+  const vaes = new Vaes();
+  return vaes.getAllVaes();
 };
 
 const handleGetVaeId = (vaeName) => {
@@ -248,6 +249,7 @@ export const addHandlers = () => {
   ipcMain.handle("setImageNsfw", (event, args) => handleSetImageNsfw(args));
   ipcMain.handle("getDirectories", handleGetDirectories);
   ipcMain.handle("getModels", handleGetModels);
+  ipcMain.handle("getVaes", handleGetVaes);
   ipcMain.handle("getModelById", (event, args) => handleGetModelById(args));
   ipcMain.handle("deleteDirectory", (event, args) =>
     handleDeleteDirectory(args),

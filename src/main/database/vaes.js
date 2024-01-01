@@ -47,6 +47,11 @@ export class Vaes {
     return false;
   }
 
+  getAllVaes() {
+    console.log("WTF", selectAllVaeQuery.all());
+    return selectAllVaeQuery.all();
+  }
+
   getVaeId({ name, hash }) {
     return this._vaesNameToIdMap.get(name);
   }
