@@ -16,6 +16,7 @@ const insertImageQuery = db.prepare(
     path,
     seed,
     ctimeMs,
+    clipSkip,
     rootDirectoryId,
     modelId,
     vaeId,
@@ -34,6 +35,7 @@ const insertImageQuery = db.prepare(
     @path,
     @seed,
     @ctimeMs,
+    @clipSkip,
     @rootDirectoryId,
     @modelId,
     @vaeId,
@@ -117,6 +119,7 @@ export class Images {
     modelId,
     sampler,
     vaeId,
+    clipSkip,
   }) {
     console.log("Image data", {
       name,
@@ -155,6 +158,7 @@ export class Images {
       modelId,
       sampler,
       vaeId,
+      clipSkip,
     });
     return result.lastInsertRowid;
   }

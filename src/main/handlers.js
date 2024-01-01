@@ -102,6 +102,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
           path: entityPath,
           seed: Number(metadata.seed),
           ctimeMs: stats.ctimeMs,
+          clipSkip: Number(metadata.clipSkip),
           modelId,
           sampler,
           vaeId,
@@ -225,10 +226,6 @@ const handleGetVaes = () => {
   return vaes.getAllVaes();
 };
 
-const handleGetVaeId = (vaeName) => {
-  //TODO
-};
-
 const handleGetDirectories = () => {
   const directories = new Directories();
   return directories.getDirectoriesTree();
@@ -249,7 +246,7 @@ console.log(process.versions);
 export const addHandlers = () => {
   ipcMain.handle("listFiles", (event, args) => handleListFiles(args));
   ipcMain.handle("importDirectory", handleImportDirectory);
-  ipcMain.handle("getImageAddons", handleGetImageAddons);
+  ipcMain.handle("getImageAddons", (event, args) => handleGetImageAddons(args));
   ipcMain.handle("getModelsList", handleGetModelsList);
   ipcMain.handle("setImageRating", (event, args) => handleSetImageRating(args));
   ipcMain.handle("setImageNsfw", (event, args) => handleSetImageNsfw(args));

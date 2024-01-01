@@ -54,6 +54,7 @@ db.transaction(() => {
             path TEXT UNIQUE,
             seed INTEGER,
             ctimeMs REAL,
+            clipSkip INTEGER,
         
         
             rootDirectoryId INTEGER,
