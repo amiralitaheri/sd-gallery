@@ -48,7 +48,6 @@ export class Vaes {
   }
 
   getAllVaes() {
-    console.log("WTF", selectAllVaeQuery.all());
     return selectAllVaeQuery.all();
   }
 
