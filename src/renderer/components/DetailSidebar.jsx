@@ -4,18 +4,27 @@ import { humanFileSize } from "../utils";
 import RateInput from "./RateInput";
 import { updateImages } from "../states/imagesStore";
 import { getModelNameById } from "../states/modelsStore";
+import { createResource, For } from "solid-js";
+import { getVaeNameById } from "../states/vaesStore";
 
-// TODO: Add addons, isNsfw
+// TODO: isNsfw switch
+
+const updateRating = async (rating) => {
+  const updatedImage = await window.sdGalleryApi.setImageRating({
+    imageId: selectedImage().id,
+    rating,
+  });
+  setSelectedImage(updatedImage);
+  updateImages();
+};
 
 const DetailSidebar = (props) => {
-  const updateRating = async (rating) => {
-    const updatedImage = await window.sdGalleryApi.setImageRating({
-      imageId: selectedImage().id,
-      rating,
-    });
-    setSelectedImage(updatedImage);
-    updateImages();
-  };
+  const [addons] = createResource(selectedImage, async ({ id }) => {
+    console.log({ id });
+    const result = await window.sdGalleryApi.getImageAddons(id);
+    console.log({ result });
+    return result;
+  });
   return (
     <div class={props.class}>
       <div class={styles.container}>
@@ -27,6 +36,31 @@ const DetailSidebar = (props) => {
               rating={selectedImage().rating}
               onChnage={updateRating}
             />
+            <div class={styles.resources}>
+              <div class={styles.twoColumn}>
+                <span>Model</span>
+                <span>
+                  {getModelNameById(selectedImage().modelId) ||
+                    selectedImage().modelId ||
+                    "-"}
+                </span>
+              </div>
+              {selectedImage().vaeId && (
+                <div class={styles.twoColumn}>
+                  <span>VAE</span>
+                  <span>{getVaeNameById(selectedImage().vaeId)}</span>
+                </div>
+              )}
+              <For each={addons()}>
+                {(addon) => (
+                  <div>
+                    <span>{addon.type}</span>
+                    <span>{addon.name}</span>
+                    <span>{addon.value}</span>
+                  </div>
+                )}
+              </For>
+            </div>
             <div class={styles.details}>
               <div>
                 <span>Prompt</span>
@@ -36,14 +70,7 @@ const DetailSidebar = (props) => {
                 <span>Negative prompt</span>
                 <span>{selectedImage().negativePrompt || "-"}</span>
               </div>
-              <div>
-                <span>Model</span>
-                <span>
-                  {getModelNameById(selectedImage().modelId) ||
-                    selectedImage().modelId ||
-                    "-"}
-                </span>
-              </div>
+
               <div>
                 <span>Seed</span>
                 <span>{selectedImage().seed || "-"}</span>
