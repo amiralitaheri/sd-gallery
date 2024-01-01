@@ -8,7 +8,7 @@
       display: block;
     }
 
-    button {
+    & > div > button {
       transform: rotate(90deg);
     }
   }
@@ -18,14 +18,17 @@
   display: flex;
   gap: 2px;
   cursor: pointer;
+
   &:hover {
     background: var(--color-border);
   }
+
   button {
     background: none;
     border: none;
     display: flex;
     align-items: center;
+
     &:hover {
       filter: brightness(0.2);
       cursor: pointer;
@@ -39,10 +42,12 @@
     list-style: none;
     padding: 0;
   }
+
   ul li {
     padding: 4px 4px 4px 16px;
   }
 }
+
 .hidden {
   visibility: hidden;
 }
