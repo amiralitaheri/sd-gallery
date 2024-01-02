@@ -1,9 +1,36 @@
-import { For } from "solid-js";
+import { createEffect, For, onCleanup } from "solid-js";
 import { imagesStoreState } from "../states/imagesStore";
 import styles from "./ThumbnailImageBrowser.module.pcss";
 import { cn } from "../utils";
 import { selectedImage, setSelectedImage } from "../states/selectedImageSignal";
 import { showNsfw } from "../states/showNsfwSignal";
+
+const options = {
+  rootMargin: "300px",
+};
+
+let observer = new IntersectionObserver((entries) => {
+  for (const entry of entries) {
+    console.log({ entry });
+    if (entry.isIntersecting) {
+      entry.target.src = entry.target.dataset.src;
+    } else {
+      entry.target.src = "";
+    }
+  }
+}, options);
+
+const LazyImageLoader = (props) => {
+  let ref;
+  createEffect(() => {
+    observer.observe(ref);
+  });
+
+  onCleanup(() => {
+    observer.unobserve(ref);
+  });
+  return <img ref={ref} data-src={props.src} />;
+};
 
 const ThumbnailImageBrowser = (props) => {
   return (
@@ -19,7 +46,7 @@ const ThumbnailImageBrowser = (props) => {
             )}
             onClick={() => setSelectedImage(image)}
           >
-            <img src={image.path} />
+            <LazyImageLoader src={image.path} />
             <span>{image.name}</span>
           </div>
         )}
