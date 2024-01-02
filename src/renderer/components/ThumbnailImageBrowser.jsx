@@ -9,11 +9,7 @@ const ThumbnailImageBrowser = (props) => {
   return (
     <div class={cn(props.class, styles.container)}>
       <For
-        each={
-          showNsfw()
-            ? imagesStoreState.images
-            : imagesStoreState.images.filter((image) => !image.isNsfw)
-        }
+        each={showNsfw() ? imagesStoreState.images : imagesStoreState.sfwImages}
       >
         {(image) => (
           <div

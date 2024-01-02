@@ -16,11 +16,7 @@ const TableImageBrowser = (props) => {
         <span>Size</span>
       </div>
       <For
-        each={
-          showNsfw()
-            ? imagesStoreState.images
-            : imagesStoreState.images.filter((image) => !image.isNsfw)
-        }
+        each={showNsfw() ? imagesStoreState.images : imagesStoreState.sfwImages}
       >
         {(image) => (
           <div
