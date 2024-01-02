@@ -1,13 +1,23 @@
 import { createSignal, For } from "solid-js";
 import styles from "./TreeView.module.pcss";
 import { cn } from "../utils";
-import { setSelectedDirectory, updateImages } from "../states/imagesStore";
+import {
+  imagesStoreState,
+  setSelectedDirectory,
+  updateImages,
+} from "../states/imagesStore";
 import { ChevronRightIcon } from "./icons";
 
 const Node = (props) => {
   const [expanded, setExpanded] = createSignal(false);
   return (
-    <li class={cn(styles.branch, expanded() && styles.expanded)}>
+    <li
+      class={cn(
+        styles.branch,
+        expanded() && styles.expanded,
+        props.path === imagesStoreState.params.directoryPath && styles.selected,
+      )}
+    >
       <div
         class={styles.label}
         onClick={() => {
