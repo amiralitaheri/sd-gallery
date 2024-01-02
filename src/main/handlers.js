@@ -8,6 +8,7 @@ import { Vaes } from "./database/vaes";
 import { Directories } from "./database/directories";
 import { Addons } from "./database/addons";
 import { Images } from "./database/images";
+import { includesNsfw } from "./metadata/audit";
 
 const isImage = (name) =>
   /\.(apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)$/gi.test(name);
@@ -92,7 +93,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
           name: entity.name,
           prompt: metadata.prompt,
           negativePrompt: metadata.negativePrompt,
-          isNsfw: false, // TODO
+          isNsfw: includesNsfw(metadata.prompt),
           fileSize: stats.size,
           fileExtension: metadata.FileType.value,
           width: Number(metadata["Image Width"].value),
