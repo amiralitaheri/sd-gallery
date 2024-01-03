@@ -1,5 +1,21 @@
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    ignore: (path) => {
+      if (path.startsWith("/.vite")) {
+        return false;
+      }
+      if (path === "/package.json") {
+        return false;
+      }
+      if (!path) {
+        return false;
+      }
+      if (path.startsWith("/node_modules")) {
+        return false;
+      }
+      return true;
+    },
+  },
   rebuildConfig: {},
   makers: [
     {
