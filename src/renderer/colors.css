@@ -13,5 +13,17 @@
 }
 
 @media (prefers-color-scheme: light) {
-  --color-text-1: rgba(0, 0, 0, 0.87);
+  :root {
+    --color-text-1: #000;
+    --color-text-2: rgba(0, 0, 0, 0.8);
+    --color-border: rgba(0, 0, 0, 0.3);
+    --color-hover: rgba(76, 194, 255, 0.3);
+    --color-background-1: #fafafa;
+    --color-background-2: #f0f0f0;
+    --color-primary: #3cace5;
+    --color-secoundary: #904deb;
+    --color-red: #8e0024;
+    --color-green: #368900;
+    --color-yellow: #ffc300;
+  }
 }
