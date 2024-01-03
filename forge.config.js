@@ -60,4 +60,16 @@ module.exports = {
       },
     },
   ],
+  publishers: [
+    {
+      name: "@electron-forge/publisher-github",
+      config: {
+        repository: {
+          owner: "amiralitaheri",
+          name: "sd-gallery",
+        },
+        prerelease: true,
+      },
+    },
+  ],
 };
