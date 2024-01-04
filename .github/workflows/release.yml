@@ -25,7 +25,6 @@ jobs:
       matrix:
         os:
           - macos-latest
-          - macos-latest-xlarge
 
     steps:
       - uses: actions/checkout@v3
@@ -35,6 +34,6 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci
-      - run: npm run publish
+      - run: npm run publish -- --arch "x64,arm64"
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
