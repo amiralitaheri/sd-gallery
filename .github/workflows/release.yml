@@ -7,7 +7,6 @@ on:
 
 jobs:
   create-release:
-    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Create Release
@@ -21,7 +20,6 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build:
-    if: github.ref == 'refs/heads/master'
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
