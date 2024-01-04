@@ -68,7 +68,7 @@ module.exports = {
           owner: "amiralitaheri",
           name: "sd-gallery",
         },
-        prerelease: true,
+        draft: true,
       },
     },
   ],
