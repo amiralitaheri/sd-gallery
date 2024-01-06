@@ -38,3 +38,18 @@ export const syncDirectory = async () => {
     toast.error("An error occurred 😔");
   }
 };
+
+export const removeDirectory = async (directoryId) => {
+  try {
+    setActionLoading({ action: "removing" });
+    const result = await window.sdGalleryApi.deleteDirectory(directoryId);
+    await updateFoldersTree();
+    await updateImages();
+    toast.success(
+      `${result.added} images was added.\n ${result.deleted} images was deleted.`,
+    );
+    setActionLoading();
+  } catch (e) {
+    toast.error("An error occurred 😔");
+  }
+};
