@@ -8,7 +8,6 @@ import { showNsfw } from "../states/showNsfwSignal";
 let observer = new IntersectionObserver(
   (entries) => {
     for (const entry of entries) {
-      console.log({ entry });
       if (entry.isIntersecting) {
         entry.target.src = entry.target.dataset.src;
       } else {
