@@ -14,6 +14,7 @@ export const importDirectory = async () => {
     await updateFoldersTree();
     await updateModels();
     await updateVaes();
+    await updateImages();
     toast.success(`${count} images imported successfully.`);
     setActionLoading();
   } catch (e) {
