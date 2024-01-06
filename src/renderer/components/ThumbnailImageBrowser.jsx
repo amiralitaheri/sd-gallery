@@ -1,4 +1,4 @@
-import { createEffect, For, onCleanup } from "solid-js";
+import { For, onCleanup, onMount } from "solid-js";
 import { imagesStoreState } from "../states/imagesStore";
 import styles from "./ThumbnailImageBrowser.module.pcss";
 import { cn } from "../utils";
@@ -22,7 +22,7 @@ let observer = new IntersectionObserver((entries) => {
 
 const LazyImageLoader = (props) => {
   let ref;
-  createEffect(() => {
+  onMount(() => {
     observer.observe(ref);
   });
 
