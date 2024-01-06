@@ -5,20 +5,21 @@ import { cn } from "../utils";
 import { selectedImage, setSelectedImage } from "../states/selectedImageSignal";
 import { showNsfw } from "../states/showNsfwSignal";
 
-const options = {
-  rootMargin: "300px",
-};
-
-let observer = new IntersectionObserver((entries) => {
-  for (const entry of entries) {
-    console.log({ entry });
-    if (entry.isIntersecting) {
-      entry.target.src = entry.target.dataset.src;
-    } else {
-      entry.target.src = "";
+let observer = new IntersectionObserver(
+  (entries) => {
+    for (const entry of entries) {
+      console.log({ entry });
+      if (entry.isIntersecting) {
+        entry.target.src = entry.target.dataset.src;
+      } else {
+        entry.target.src = "";
+      }
     }
-  }
-}, options);
+  },
+  {
+    rootMargin: "300px",
+  },
+);
 
 const LazyImageLoader = (props) => {
   let ref;
