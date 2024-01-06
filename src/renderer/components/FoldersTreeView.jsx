@@ -3,6 +3,7 @@ import TreeView from "./TreeView";
 import { imagesStoreState, setSelectedDirectory } from "../states/imagesStore";
 import styles from "./FoldersTreeView.module.pcss";
 import { cn } from "../utils";
+import ActionLoading from "./ActionLoading";
 
 const FoldersTreeView = (props) => {
   return (
@@ -17,6 +18,7 @@ const FoldersTreeView = (props) => {
         All
       </button>
       <TreeView data={foldersTree} />
+      <ActionLoading />
     </div>
   );
 };
