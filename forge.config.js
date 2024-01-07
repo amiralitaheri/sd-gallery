@@ -10,6 +10,9 @@ module.exports = {
       if (!path) {
         return false;
       }
+      if (/[\\/]node_modules[\\/]\.bin($|[\\/])/.test(path)) {
+        return true;
+      }
       if (/[\\/]node_modules.*/.test(path)) {
         return false;
       }
