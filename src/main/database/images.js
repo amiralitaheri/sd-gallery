@@ -1,5 +1,6 @@
 import { db } from "./index";
 import * as fs from "fs";
+import { sep } from "path";
 
 const insertImageQuery = db.prepare(
   `INSERT INTO image (
@@ -174,7 +175,7 @@ export class Images {
         isNsfw:
           filter?.isNsfw === false ? 0 : filter?.isNsfw === true ? 1 : null,
         promptLike: filter?.search && `%${filter.search}%`,
-        directoryPathLike: directoryPath && directoryPath + "\\%",
+        directoryPathLike: directoryPath && `directoryPath${sep}%`,
         sortKey: sort?.key || "id",
       });
     }
@@ -182,7 +183,7 @@ export class Images {
       modelId: filter?.modelId,
       isNsfw: filter?.isNsfw === false ? 0 : filter?.isNsfw === true ? 1 : null,
       promptLike: filter?.search && `%${filter.search}%`,
-      directoryPathLike: directoryPath && directoryPath + "\\%",
+      directoryPathLike: directoryPath && `directoryPath${sep}%`,
       sortKey: sort?.key || "id",
     });
   }
