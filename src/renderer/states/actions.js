@@ -53,3 +53,14 @@ export const removeDirectory = async (directoryId) => {
     toast.error("An error occurred 😔");
   }
 };
+
+export const refresh = async () => {
+  try {
+    setActionLoading({ action: "refreshing" });
+    await updateFoldersTree();
+    await updateImages();
+    setActionLoading();
+  } catch (e) {
+    toast.error("An error occurred 😔");
+  }
+};

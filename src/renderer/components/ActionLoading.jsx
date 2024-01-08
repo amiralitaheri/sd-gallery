@@ -6,6 +6,7 @@ const texts = {
   importing: "Importing new directory",
   syncing: "Syncing directories",
   removing: "Removing directory",
+  refreshing: "Refreshing",
 };
 
 const ActionLoading = () => {

@@ -31,6 +31,9 @@ import { render } from "solid-js/web";
 import "./colors.css";
 import "./index.css";
 import App from "./App";
+import { registerListeners } from "./states/listeners";
+
+registerListeners();
 
 const root = document.getElementById("root");
 
