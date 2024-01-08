@@ -17,6 +17,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Install flatpak builder
+        if: matrix.os == 'ubuntu-latest'
+        run: apt install flatpak-builder, eu-strip -y
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
