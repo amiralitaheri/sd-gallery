@@ -1,4 +1,4 @@
-import { BrowserWindow, dialog, ipcMain } from "electron";
+import { BrowserWindow, dialog, ipcMain, Menu } from "electron";
 import { stat, readdir } from "fs/promises";
 import { basename, join } from "path";
 import { getMetadata } from "./metadata";
@@ -242,6 +242,22 @@ const handleSetImageNsfw = ({ imageId, isNsfw }) => {
   images.setIsNsfw({ imageId, isNsfw });
 };
 
+const handleShowDirectoryContextMenu = (event, directory) => {
+  if (!directory.isRoot) return;
+  const template = [
+    {
+      label: "Remove directory",
+      click: () => {
+        const directories = new Directories();
+        directories.removeDirectory(directory.id);
+        event.sender.send("refresh");
+      },
+    },
+  ];
+  const menu = Menu.buildFromTemplate(template);
+  menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
+};
+
 console.log(process.versions);
 
 export const addHandlers = () => {
@@ -261,4 +277,5 @@ export const addHandlers = () => {
   ipcMain.handle("syncDirectories", (event, args) =>
     handleSyncDirectories(args),
   );
+  ipcMain.on("showDirectoryContextMenu", handleShowDirectoryContextMenu);
 };

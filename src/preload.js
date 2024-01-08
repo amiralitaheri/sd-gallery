@@ -18,5 +18,7 @@ contextBridge.exposeInMainWorld("sdGalleryApi", {
   getModelById: (id) => ipcRenderer.invoke("getModelById", id),
   syncDirectories: (id) => ipcRenderer.invoke("syncDirectories", id),
   deleteDirectory: (id) => ipcRenderer.invoke("deleteDirectory", id),
+  showDirectoryContextMenu: (args) =>
+    ipcRenderer.send("showDirectoryContextMenu", args),
   onRefresh: (callback) => ipcRenderer.on("refresh", callback),
 });

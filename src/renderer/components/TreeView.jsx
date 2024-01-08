@@ -25,6 +25,16 @@ const Node = (props) => {
           setSelectedDirectory(props.path);
           updateImages();
         }}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          window.sdGalleryApi.showDirectoryContextMenu({
+            id: props.id,
+            isRoot: props.isRoot,
+            path: props.path,
+            name: props.name,
+            rootDirectoryId: props.rootDirectoryId,
+          });
+        }}
       >
         <button
           class={cn(!props.children && styles.hidden)}
