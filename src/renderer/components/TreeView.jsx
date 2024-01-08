@@ -1,11 +1,7 @@
 import { createSignal, For } from "solid-js";
 import styles from "./TreeView.module.pcss";
 import { cn } from "../utils";
-import {
-  imagesStoreState,
-  setSelectedDirectory,
-  updateImages,
-} from "../states/imagesStore";
+import { imagesStoreState, setSelectedDirectory } from "../states/imagesStore";
 import { ChevronRightIcon } from "./icons";
 
 const Node = (props) => {

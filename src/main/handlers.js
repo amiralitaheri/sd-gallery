@@ -149,8 +149,6 @@ const handleDeleteDirectory = (id) => {
   directories.removeDirectory(id);
 };
 
-const removeDeletedImagesFromDirectory = (rootDirectoryId) => {};
-
 /**
  * @param {number} rootDirectoryId
  * @returns {Promise<{deleted: number, added: number}>}
