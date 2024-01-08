@@ -12,7 +12,7 @@ if (electronSquirrelStartup) {
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    fullscreen: false,
+    fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       webSecurity: false, // TODO: Check other alternatives for loading local resources
