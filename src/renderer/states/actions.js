@@ -15,7 +15,7 @@ export const importDirectory = async () => {
     await updateModels();
     await updateVaes();
     await updateImages();
-    toast.success(`${count} images imported successfully.`);
+    if (count) toast.success(`${count} images imported successfully.`);
     setActionLoading();
   } catch (e) {
     toast.error("An error occurred 😔");
