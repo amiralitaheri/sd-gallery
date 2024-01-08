@@ -10,6 +10,7 @@ const [state, setState] = createStore({
 
 const setSelectedDirectory = (directoryPath) => {
   setState("params", "directoryPath", directoryPath);
+  updateImages();
 };
 
 const updateImages = async () => {

@@ -23,7 +23,6 @@ const Node = (props) => {
         onClick={() => {
           setExpanded(true);
           setSelectedDirectory(props.path);
-          updateImages();
         }}
         onContextMenu={(e) => {
           e.preventDefault();
