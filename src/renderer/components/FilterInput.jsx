@@ -5,7 +5,7 @@ import styles from "./FilterInput.module.pcss";
 import { updateImages, updateParams } from "../states/imagesStore";
 
 const FilterInput = (props) => {
-  let searchRef, modelRef, nsfwRef, sortRef, sortDirectionRef;
+  let searchRef, modelRef, sortRef, sortDirectionRef;
   const onSubmit = (e) => {
     e.preventDefault();
     const filter = {};
@@ -14,9 +14,6 @@ const FilterInput = (props) => {
     }
     if (modelRef.value) {
       filter.modelId = modelRef.value;
-    }
-    if (nsfwRef.value) {
-      filter.isNsfw = Number(nsfwRef.value) === 2;
     }
 
     const sort = {};
@@ -44,14 +41,6 @@ const FilterInput = (props) => {
               <For each={modelsStore.models}>
                 {(model) => <option value={model.id}>{model.name}</option>}
               </For>
-            </select>
-          </div>
-          <div class={styles.selectContainer}>
-            <label>NSFW:</label>
-            <select ref={nsfwRef}>
-              <option value="">All</option>
-              <option value={1}>SFW</option>
-              <option value={2}>NSFW</option>
             </select>
           </div>
         </div>
