@@ -20,10 +20,7 @@ const updateRating = async (rating) => {
 
 const DetailSidebar = (props) => {
   const [addons] = createResource(selectedImage, async ({ id }) => {
-    console.log({ id });
-    const result = await window.sdGalleryApi.getImageAddons(id);
-    console.log({ result });
-    return result;
+    return await window.sdGalleryApi.getImageAddons(id);
   });
   return (
     <div class={props.class}>

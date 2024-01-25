@@ -17,7 +17,6 @@ const updateVaes = async () => {
 updateVaes();
 
 const getVaeNameById = (id) => {
-  console.log({ id, state });
   return state.vaesMap[id]?.name;
 };
 

@@ -39,7 +39,6 @@ const processFilesInDirectory = async (path, rootId = null) => {
     withFileTypes: true,
     recursive: false, // TODO: Upgrade node js or use another method for recursive
   });
-  console.log(`Len = ${entities.length}`);
   const directoryId = directories.addDirectory({
     name: basename(path),
     path,
@@ -47,8 +46,6 @@ const processFilesInDirectory = async (path, rootId = null) => {
   });
   for (const entity of entities) {
     const entityPath = join(path, entity.name);
-    console.log({ entity, entityPath });
-
     if (entity.isDirectory()) {
       counter += await processFilesInDirectory(
         entityPath,
@@ -64,11 +61,8 @@ const processFilesInDirectory = async (path, rootId = null) => {
         continue;
       }
       const stats = await stat(entityPath);
-      console.log(stats);
 
       const metadata = await getMetadata(entityPath);
-      console.log(metadata);
-
       let sampler, modelId, vaeId;
 
       if (metadata.sampler) {

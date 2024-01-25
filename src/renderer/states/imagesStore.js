@@ -14,12 +14,10 @@ const setSelectedDirectory = (directoryPath) => {
 };
 
 const updateImages = async () => {
-  console.log(state.params);
   setState("loading", true);
   const images = await window.sdGalleryApi.listFiles(
     JSON.parse(JSON.stringify(state.params)),
   );
-  console.log(state.params, images);
   setState("images", images);
   setState(
     "nonHiddenImages",

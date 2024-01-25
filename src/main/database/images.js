@@ -122,25 +122,6 @@ export class Images {
     vaeId,
     clipSkip,
   }) {
-    console.log("Image data", {
-      name,
-      prompt,
-      negativePrompt,
-      isHidden,
-      fileSize,
-      fileExtension,
-      width,
-      height,
-      cfgScale,
-      steps,
-      path,
-      seed,
-      ctimeMs,
-      rootDirectoryId,
-      modelId,
-      sampler,
-      vaeId,
-    });
     const result = insertImageQuery.run({
       name,
       prompt,

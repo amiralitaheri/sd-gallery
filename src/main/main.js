@@ -20,7 +20,7 @@ const createWindow = () => {
     },
   });
   mainWindow.maximize();
-  mainWindow.removeMenu();
+  // mainWindow.removeMenu();
   mainWindow.show();
 
   // and load the index.html of the app.
