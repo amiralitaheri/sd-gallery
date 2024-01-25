@@ -240,15 +240,17 @@ const handleSetImageRating = ({ imageId, rating }) => {
 
 const handleSetImageIsHidden = ({ imageId, isHidden }) => {
   const images = new Images();
-  images.setIsNsfw({ imageId, isNsfw });
   images.setIsHidden({ imageId, isHidden });
 };
+
+const handleSetDirectoryIsHidden = ({ directoryId, isHidden }) => {
+  const directories = new Directories();
+  directories.setIsHidden({ directoryId, isHidden });
 };
 
 const handleShowDirectoryContextMenu = (event, directory) => {
-  if (!directory.isRoot) return;
   const template = [
-    {
+    directory.isRoot && {
       label: "Remove directory",
       click: () => {
         const directories = new Directories();
@@ -256,8 +258,21 @@ const handleShowDirectoryContextMenu = (event, directory) => {
         event.sender.send("refresh");
       },
     },
+    {
+      label: directory.isHidden
+        ? "Unmark directory as hidden"
+        : "Mark directory as hidden",
+      click: () => {
+        const directories = new Directories();
+        directories.setIsHidden({
+          directoryId: directory.id,
+          isHidden: !directory.isHidden,
+        });
+        event.sender.send("refresh");
+      },
+    },
   ];
-  const menu = Menu.buildFromTemplate(template);
+  const menu = Menu.buildFromTemplate(template.filter(Boolean));
   menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
 };
 
@@ -269,9 +284,11 @@ export const addHandlers = () => {
   ipcMain.handle("getImageAddons", (event, args) => handleGetImageAddons(args));
   ipcMain.handle("getModelsList", handleGetModelsList);
   ipcMain.handle("setImageRating", (event, args) => handleSetImageRating(args));
-  ipcMain.handle("setImageNsfw", (event, args) => handleSetImageNsfw(args));
   ipcMain.handle("setImageIsHidden", (event, args) =>
     handleSetImageIsHidden(args),
+  );
+  ipcMain.handle("setDirectoryIsHidden", (event, args) =>
+    handleSetDirectoryIsHidden(args),
   );
   ipcMain.handle("getDirectories", handleGetDirectories);
   ipcMain.handle("getModels", handleGetModels);

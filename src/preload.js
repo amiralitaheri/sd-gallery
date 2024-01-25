@@ -10,10 +10,10 @@ contextBridge.exposeInMainWorld("sdGalleryApi", {
   getModelsList: () => ipcRenderer.invoke("getImageAddons"),
   setImageRating: ({ imageId, rating }) =>
     ipcRenderer.invoke("setImageRating", { imageId, rating }),
-  handleSetImageNsfw: ({ imageId, isNsfw }) =>
-    ipcRenderer.invoke("handleSetImageNsfw", { imageId, isNsfw }),
   setImageIsHidden: ({ imageId, isHidden }) =>
     ipcRenderer.invoke("setImageIsHidden", { imageId, isHidden }),
+  setDirectoryIsHidden: ({ imageId, isHidden }) =>
+    ipcRenderer.invoke("setDirectoryIsHidden", { imageId, isHidden }),
   getDirectories: () => ipcRenderer.invoke("getDirectories"),
   getVaes: () => ipcRenderer.invoke("getVaes"),
   getModels: () => ipcRenderer.invoke("getModels"),

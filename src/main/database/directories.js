@@ -18,6 +18,10 @@ const getRootDirectoriesQuery = db.prepare(
   "SELECT * FROM directory WHERE isRoot = 1",
 );
 
+const updateDirectoryIsHiddenQuery = db.prepare(
+  "UPDATE directory SET isHidden = @isHidden WHERE id = @directoryId",
+);
+
 export class Directories {
   constructor() {
     // Check if an instance already exists
@@ -59,6 +63,13 @@ export class Directories {
   removeDirectory(id) {
     deleteDirectoryQuery.run({ id });
     // Should I delete models, addons , vaes
+  }
+
+  setIsHidden({ directoryId, isHidden }) {
+    updateDirectoryIsHiddenQuery.run({
+      directoryId,
+      isHidden: isHidden ? 1 : 0,
+    });
   }
 
   getDirectoriesTree() {

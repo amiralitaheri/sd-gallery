@@ -17,6 +17,7 @@ db.transaction(() => {
             name TEXT,
             path TEXT,
             isRoot INTEGER,
+            isHidden INTEGER,
             rootDirectoryId INTEGER,
             FOREIGN KEY (rootDirectoryId) REFERENCES directory(id) ON DELETE CASCADE
         );
