@@ -22,5 +22,7 @@ contextBridge.exposeInMainWorld("sdGalleryApi", {
   deleteDirectory: (id) => ipcRenderer.invoke("deleteDirectory", id),
   showDirectoryContextMenu: (args) =>
     ipcRenderer.send("showDirectoryContextMenu", args),
+  showImageContextMenu: (args) =>
+    ipcRenderer.send("showImageContextMenu", args),
   onRefresh: (callback) => ipcRenderer.on("refresh", callback),
 });

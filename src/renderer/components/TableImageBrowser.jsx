@@ -29,6 +29,12 @@ const TableImageBrowser = (props) => {
               selectedImage()?.id === image.id && styles.selected,
             )}
             onClick={() => setSelectedImage(image)}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              window.sdGalleryApi.showImageContextMenu(
+                JSON.parse(JSON.stringify(image)),
+              );
+            }}
           >
             <span>{image.name}</span>
             <span>

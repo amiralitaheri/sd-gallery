@@ -49,6 +49,12 @@ const ThumbnailImageBrowser = (props) => {
               selectedImage()?.id === image.id && styles.selected,
             )}
             onClick={() => setSelectedImage(image)}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              window.sdGalleryApi.showImageContextMenu(
+                JSON.parse(JSON.stringify(image)),
+              );
+            }}
           >
             <LazyImageLoader src={image.path} />
             <span>{image.name}</span>

@@ -9,6 +9,7 @@ import { Directories } from "./database/directories";
 import { Addons } from "./database/addons";
 import { Images } from "./database/images";
 import { includesNsfw } from "./metadata/audit";
+import { openFileExplorer } from "./utils";
 
 // TODO
 const autoHideNsfw = true;
@@ -272,6 +273,19 @@ const handleShowDirectoryContextMenu = (event, directory) => {
   menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
 };
 
+const handleShowImageContextMenu = (event, image) => {
+  const template = [
+    {
+      label: "Open in explorer",
+      click: () => {
+        openFileExplorer(image.path);
+      },
+    },
+  ];
+  const menu = Menu.buildFromTemplate(template.filter(Boolean));
+  menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
+};
+
 console.log(process.versions);
 
 export const addHandlers = () => {
@@ -297,4 +311,5 @@ export const addHandlers = () => {
     handleSyncDirectories(args),
   );
   ipcMain.on("showDirectoryContextMenu", handleShowDirectoryContextMenu);
+  ipcMain.on("showImageContextMenu", handleShowImageContextMenu);
 };
