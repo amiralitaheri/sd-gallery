@@ -3,19 +3,19 @@ import { cn } from "../utils";
 import { imagesStoreState } from "../states/imagesStore";
 import { ClosedEyeIcon, EyeIcon, TableIcon, ThumbnailsIcon } from "./icons";
 import { setViewType, viewType } from "../states/viewTypeSignal";
-import { showNsfw, toggleShowNsfw } from "../states/showNsfwSignal";
+import { showHidden, toggleShowHidden } from "../states/showHiddenSignal";
 
 const Footer = (props) => {
   const imagesCount = () =>
-    showNsfw()
+    showHidden()
       ? imagesStoreState.images.length
-      : imagesStoreState.sfwImages.length;
+      : imagesStoreState.nonHiddenImages.length;
   return (
     <div class={cn(props.class, styles.container)}>
       <div>
         {`${imagesCount()} item${imagesCount() > 1 ? "s" : ""}`} |
-        <button onClick={toggleShowNsfw}>
-          {showNsfw() ? <EyeIcon /> : <ClosedEyeIcon />}
+        <button onClick={toggleShowHidden}>
+          {showHidden() ? <EyeIcon /> : <ClosedEyeIcon />}
         </button>
       </div>
       <div>

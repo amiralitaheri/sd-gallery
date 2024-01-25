@@ -44,7 +44,7 @@ db.transaction(() => {
             prompt TEXT,
             negativePrompt TEXT,
             rating INTEGER,
-            isNsfw INTEGER,
+            isHidden INTEGER,
             fileSize INTEGER,
             fileExtension TEXT,
             width INTEGER,

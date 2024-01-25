@@ -7,7 +7,7 @@ const insertImageQuery = db.prepare(
     name,
     prompt,
     negativePrompt,
-    isNsfw,
+    isHidden,
     fileSize,
     fileExtension,
     width,
@@ -26,7 +26,7 @@ const insertImageQuery = db.prepare(
     @name,
     @prompt,
     @negativePrompt,
-    @isNsfw,
+    @isHidden,
     @fileSize,
     @fileExtension,
     @width,
@@ -65,7 +65,7 @@ const getImagesByRootDirectoryIdQuery = db.prepare(
 const selectAllImageQueryAsc = db.prepare(
   "SELECT * From image " +
     "WHERE (modelId=@modelId OR @modelId IS NULL) AND" +
-    " (isNsfw=@isNsfw OR @isNsfw IS NULL) AND" +
+    " (isHidden=@isHidden OR @isHidden IS NULL) AND" +
     " (prompt like @promptLike OR @promptLike IS NULL) AND" +
     " (path like @directoryPathLike OR @directoryPathLike IS NULL)" +
     " ORDER BY @sortKey ASC;",
@@ -74,7 +74,7 @@ const selectAllImageQueryAsc = db.prepare(
 const selectAllImageQueryDesc = db.prepare(
   "SELECT * From image " +
     "WHERE modelId=@modelId OR @modelId IS NULL AND" +
-    " (isNsfw=@isNsfw OR @isNsfw IS NULL) AND" +
+    " (isHidden=@isHidden OR @isHidden IS NULL) AND" +
     " (prompt like @promptLike OR @promptLike IS NULL) AND" +
     " (path like @directoryPathLike OR @directoryPathLike IS NULL)" +
     " ORDER BY @sortKey DESC;",
@@ -84,8 +84,8 @@ const updateImageRatingQuery = db.prepare(
   "UPDATE image set rating = @rating where id = @imageId",
 );
 
-const updateImageIsNsfwQuery = db.prepare(
-  "UPDATE image set isNsfw = @isNsfw where id = @imageId",
+const updateImageIsHiddenQuery = db.prepare(
+  "UPDATE image set isHidden = @isHidden where id = @imageId",
 );
 
 export class Images {
@@ -106,7 +106,7 @@ export class Images {
     name,
     prompt,
     negativePrompt,
-    isNsfw,
+    isHidden,
     fileSize,
     fileExtension,
     width,
@@ -126,7 +126,7 @@ export class Images {
       name,
       prompt,
       negativePrompt,
-      isNsfw,
+      isHidden,
       fileSize,
       fileExtension,
       width,
@@ -145,7 +145,7 @@ export class Images {
       name,
       prompt,
       negativePrompt,
-      isNsfw: isNsfw ? 1 : 0,
+      isHidden: isHidden ? 1 : 0,
       fileSize,
       fileExtension,
       width,
@@ -172,8 +172,8 @@ export class Images {
     if (sort?.direction === "desc") {
       return selectAllImageQueryDesc.all({
         modelId: filter?.modelId,
-        isNsfw:
-          filter?.isNsfw === false ? 0 : filter?.isNsfw === true ? 1 : null,
+        isHidden:
+          filter?.isHidden === false ? 0 : filter?.isHidden === true ? 1 : null,
         promptLike: filter?.search && `%${filter.search}%`,
         directoryPathLike: directoryPath && `${directoryPath}${sep}%`,
         sortKey: sort?.key || "id",
@@ -181,7 +181,8 @@ export class Images {
     }
     return selectAllImageQueryAsc.all({
       modelId: filter?.modelId,
-      isNsfw: filter?.isNsfw === false ? 0 : filter?.isNsfw === true ? 1 : null,
+      isHidden:
+        filter?.isHidden === false ? 0 : filter?.isHidden === true ? 1 : null,
       promptLike: filter?.search && `%${filter.search}%`,
       directoryPathLike: directoryPath && `${directoryPath}${sep}%`,
       sortKey: sort?.key || "id",
@@ -201,8 +202,8 @@ export class Images {
     return getImageById.get({ id: imageId });
   }
 
-  setIsNsfw({ imageId, isNsfw }) {
-    updateImageIsNsfwQuery.run({ imageId, isNsfw: isNsfw ? 1 : 0 });
+  setIsHidden({ imageId, isHidden }) {
+    updateImageIsHiddenQuery.run({ imageId, isHidden: isHidden ? 1 : 0 });
   }
 
   removeDeletedImagesFromDirectory(rootDirectoryId) {

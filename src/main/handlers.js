@@ -10,6 +10,9 @@ import { Addons } from "./database/addons";
 import { Images } from "./database/images";
 import { includesNsfw } from "./metadata/audit";
 
+// TODO
+const autoHideNsfw = true;
+
 const isImage = (name) =>
   /\.(apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)$/gi.test(name);
 
@@ -93,7 +96,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
           name: entity.name,
           prompt: metadata.prompt,
           negativePrompt: metadata.negativePrompt,
-          isNsfw: includesNsfw(metadata.prompt),
+          isHidden: autoHideNsfw && includesNsfw(metadata.prompt),
           fileSize: stats.size,
           fileExtension: metadata.FileType.value,
           width: Number(metadata["Image Width"].value),
@@ -189,7 +192,7 @@ const handleSyncDirectories = async (rootDirectoryId) => {
 
 /**
  * @param {("model"|"vae"|"seed"|"prompt"|"sampler")} [groupBy]
- * @param {modelId: number, search: string, isNsfw: boolean} [filter]
+ * @param {modelId: number, search: string, isHidden: boolean} [filter]
  * @param {{key: ("ctimeMs"|"name"|"fileSize"|"rating"|"cfgScale"|"steps"), direction: ("asc" | "desc")}} [sort]
  * @param {string} [directoryPath]
  * @returns {*}
@@ -235,9 +238,11 @@ const handleSetImageRating = ({ imageId, rating }) => {
   return images.setRating({ imageId, rating });
 };
 
-const handleSetImageNsfw = ({ imageId, isNsfw }) => {
+const handleSetImageIsHidden = ({ imageId, isHidden }) => {
   const images = new Images();
   images.setIsNsfw({ imageId, isNsfw });
+  images.setIsHidden({ imageId, isHidden });
+};
 };
 
 const handleShowDirectoryContextMenu = (event, directory) => {
@@ -265,6 +270,9 @@ export const addHandlers = () => {
   ipcMain.handle("getModelsList", handleGetModelsList);
   ipcMain.handle("setImageRating", (event, args) => handleSetImageRating(args));
   ipcMain.handle("setImageNsfw", (event, args) => handleSetImageNsfw(args));
+  ipcMain.handle("setImageIsHidden", (event, args) =>
+    handleSetImageIsHidden(args),
+  );
   ipcMain.handle("getDirectories", handleGetDirectories);
   ipcMain.handle("getModels", handleGetModels);
   ipcMain.handle("getVaes", handleGetVaes);

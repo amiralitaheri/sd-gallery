@@ -7,7 +7,7 @@ import { getModelNameById } from "../states/modelsStore";
 import { createResource, For } from "solid-js";
 import { getVaeNameById } from "../states/vaesStore";
 
-// TODO: isNsfw switch
+// TODO: isHidden switch
 
 const updateRating = async (rating) => {
   const updatedImage = await window.sdGalleryApi.setImageRating({

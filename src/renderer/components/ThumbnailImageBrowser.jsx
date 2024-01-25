@@ -3,7 +3,7 @@ import { imagesStoreState } from "../states/imagesStore";
 import styles from "./ThumbnailImageBrowser.module.pcss";
 import { cn } from "../utils";
 import { selectedImage, setSelectedImage } from "../states/selectedImageSignal";
-import { showNsfw } from "../states/showNsfwSignal";
+import { showHidden } from "../states/showHiddenSignal";
 
 let observer = new IntersectionObserver(
   (entries) => {
@@ -36,7 +36,11 @@ const ThumbnailImageBrowser = (props) => {
   return (
     <div class={cn(props.class, styles.container)}>
       <For
-        each={showNsfw() ? imagesStoreState.images : imagesStoreState.sfwImages}
+        each={
+          showHidden()
+            ? imagesStoreState.images
+            : imagesStoreState.nonHiddenImages
+        }
       >
         {(image) => (
           <div

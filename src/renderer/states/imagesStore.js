@@ -4,7 +4,7 @@ const [state, setState] = createStore({
   loading: false,
   params: { groupBy: null, filter: null, sort: null, directoryPath: null },
   images: [],
-  sfwImages: [],
+  nonHiddenImages: [],
   selectedImageId: null,
 });
 
@@ -22,8 +22,8 @@ const updateImages = async () => {
   console.log(state.params, images);
   setState("images", images);
   setState(
-    "sfwImages",
-    images.filter((image) => !image.isNsfw),
+    "nonHiddenImages",
+    images.filter((image) => !image.isHidden),
   );
   setState("loading", false);
 };

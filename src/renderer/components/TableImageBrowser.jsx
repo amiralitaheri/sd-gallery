@@ -3,7 +3,7 @@ import { imagesStoreState } from "../states/imagesStore";
 import styles from "./TableImageBrowser.module.pcss";
 import { cn, humanFileSize } from "../utils";
 import { selectedImage, setSelectedImage } from "../states/selectedImageSignal";
-import { showNsfw } from "../states/showNsfwSignal";
+import { showHidden } from "../states/showHiddenSignal";
 import { getModelNameById } from "../states/modelsStore";
 
 const TableImageBrowser = (props) => {
@@ -16,7 +16,11 @@ const TableImageBrowser = (props) => {
         <span>Size</span>
       </div>
       <For
-        each={showNsfw() ? imagesStoreState.images : imagesStoreState.sfwImages}
+        each={
+          showHidden()
+            ? imagesStoreState.images
+            : imagesStoreState.nonHiddenImages
+        }
       >
         {(image) => (
           <div
