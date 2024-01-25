@@ -1,19 +1,20 @@
 module.exports = {
   packagerConfig: {
     ignore: (path) => {
-      if (/[\\/]\.vite.*/.test(path)) {
-        return false;
-      }
-      if (/[\\/]package\.json/.test(path)) {
-        return false;
-      }
       if (!path) {
         return false;
       }
-      if (/[\\/]node_modules[\\/]\.bin($|[\\/])/.test(path)) {
+      if (path.startsWith("/.vite")) {
+        return false;
+      }
+      if (path === "/package.json") {
+        return false;
+      }
+
+      if (path.startsWith("/node_modules/.bin")) {
         return true;
       }
-      if (/[\\/]node_modules.*/.test(path)) {
+      if (path.startsWith("/node_modules")) {
         return false;
       }
       return true;
