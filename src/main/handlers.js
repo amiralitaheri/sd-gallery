@@ -92,9 +92,10 @@ const processFilesInDirectory = async (path, rootId = null) => {
           negativePrompt: metadata.negativePrompt,
           isHidden: autoHideNsfw && includesNsfw(metadata.prompt),
           fileSize: stats.size,
-          fileExtension: metadata.FileType.value,
-          width: Number(metadata["Image Width"].value),
-          height: Number(metadata["Image Height"].value),
+          fileExtension:
+            metadata.FileType?.value || metadata["File Type"]?.value,
+          width: Number(metadata["Image Width"]?.value),
+          height: Number(metadata["Image Height"]?.value),
           cfgScale: Number(metadata.cfgScale),
           steps: Number(metadata.steps),
           path: entityPath,
