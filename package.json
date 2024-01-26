@@ -1,6 +1,6 @@
 {
   "name": "sd-gallery",
-  "productName": "sd-gallery",
+  "productName": "SD Gallery",
   "version": "0.2.6",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
