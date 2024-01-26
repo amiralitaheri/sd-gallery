@@ -1,7 +1,11 @@
 import Database from "better-sqlite3";
 import { join } from "path";
+import { app } from "electron";
+import { name } from "../../../package.json";
 
-export const db = new Database(join(__dirname, "/database_v1.db"));
+export const db = new Database(
+  join(app.getPath("appData"), name, "/database_v1.db"),
+);
 db.transaction(() => {
   db.exec(`
         PRAGMA foreign_keys = ON;
