@@ -9,7 +9,8 @@ import { Directories } from "./database/directories";
 import { Addons } from "./database/addons";
 import { Images } from "./database/images";
 import { includesNsfw } from "./metadata/audit";
-import { openFileExplorer } from "./utils";
+import { openFileExplorer, SUPPORTS_COPY_FILE_TO_CLIPBOARD } from "./utils";
+import { writeFilePaths as writeFilePathsToClipboard } from "electron-clipboard-ex";
 
 // TODO
 const autoHideNsfw = true;
@@ -279,6 +280,12 @@ const handleShowImageContextMenu = (event, image) => {
       label: "Open in explorer",
       click: () => {
         openFileExplorer(image.path);
+      },
+    },
+    SUPPORTS_COPY_FILE_TO_CLIPBOARD && {
+      label: "Copy",
+      click: () => {
+        writeFilePathsToClipboard([image.path]);
       },
     },
   ];

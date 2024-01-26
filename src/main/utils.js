@@ -1,6 +1,10 @@
 import { join, dirname } from "path";
 import * as child_process from "child_process";
 
+export const SUPPORTS_COPY_FILE_TO_CLIPBOARD = ["darwin", "win32"].includes(
+  process.platform,
+);
+
 export const openFileExplorer = (filePath) => {
   let command = "";
   switch (process.platform) {
