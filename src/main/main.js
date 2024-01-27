@@ -1,17 +1,92 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, Menu, MenuItem, screen } from "electron";
 import path from "path";
 import { setupDB } from "./database";
 import { addHandlers } from "./handlers";
 import electronSquirrelStartup from "electron-squirrel-startup";
+import { loadRendererUrl } from "./utils";
+import { productName } from "../../package.json";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (electronSquirrelStartup) {
   app.quit();
 }
 
+let mainWindow;
+
+const showAboutModal = () => {
+  const modal = new BrowserWindow({
+    parent: mainWindow,
+    modal: true,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+    },
+    width: 400,
+    height: 300,
+    resizable: false,
+    minimizable: false,
+    title: `About ${productName}`,
+  });
+  modal.removeMenu();
+  loadRendererUrl(modal, "/about");
+  modal.once("ready-to-show", () => {
+    modal.show();
+  });
+};
+
+const showSettingsModal = () => {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width } = primaryDisplay.workAreaSize;
+
+  const modal = new BrowserWindow({
+    parent: mainWindow,
+    modal: true,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+    },
+    width: width / 2,
+    height: width / 2,
+    minimizable: false,
+    title: "Settings",
+  });
+  modal.removeMenu();
+  loadRendererUrl(modal, "/settings");
+  modal.once("ready-to-show", () => {
+    modal.show();
+  });
+};
+
+const createApplicationMenu = () => {
+  const applicationMenu = Menu.getApplicationMenu();
+  const filteredItems = applicationMenu.items.filter((item) =>
+    ["File", "View", "Window", ""].includes(item.label),
+  );
+
+  const customMenu = new Menu();
+
+  for (const item of filteredItems) {
+    customMenu.append(item);
+  }
+  customMenu.append(
+    new MenuItem({
+      label: "Settings",
+      click: showSettingsModal,
+    }),
+  );
+  customMenu.append(
+    new MenuItem({
+      label: "About",
+      click: showAboutModal,
+    }),
+  );
+
+  Menu.setApplicationMenu(customMenu);
+};
+
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     show: false,
 
     webPreferences: {
@@ -20,22 +95,16 @@ const createWindow = () => {
     },
   });
   mainWindow.maximize();
-  // mainWindow.removeMenu();
   mainWindow.show();
 
   // and load the index.html of the app.
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
-  } else {
-    mainWindow.loadFile(
-      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
-    );
-  }
+  loadRendererUrl(mainWindow, "/");
 };
 
 app.whenReady().then(() => {
   setupDB();
   addHandlers();
+  createApplicationMenu();
   createWindow();
   app.on("activate", function () {
     // On OS X it's common to re-create a window in the app when the

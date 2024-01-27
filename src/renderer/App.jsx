@@ -1,17 +1,15 @@
-import Dashboard from "./pages/Dashboard";
-import { Toaster } from "solid-toast";
+import { HashRouter, Route } from "@solidjs/router";
+import { lazy } from "solid-js";
+
+const About = lazy(() => import("./pages/About"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 function App() {
   return (
-    <>
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          duration: 5000,
-        }}
-      />
-      <Dashboard />
-    </>
+    <HashRouter>
+      <Route path="/about" component={About} />
+      <Route path="/" component={Dashboard} />
+    </HashRouter>
   );
 }
 
