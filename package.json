@@ -2,7 +2,8 @@
   "name": "sd-gallery",
   "productName": "SD Gallery",
   "version": "0.2.6",
-  "description": "My Electron application description",
+  "description": "An image gallery for AI generated images.",
+  "homepage": "https://github.com/amiralitaheri/sd-gallery",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -11,10 +12,15 @@
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
-  "keywords": [],
+  "keywords": [
+    "stable diffiusion",
+    "gallery",
+    "ai"
+  ],
   "author": {
     "name": "Amirali Taheri",
-    "email": "amiralitaheri64@gmail.com"
+    "email": "amiralitaheri64@gmail.com",
+    "url": "https://amiralitaheri.ir"
   },
   "license": "MIT",
   "devDependencies": {
@@ -40,5 +46,9 @@
     "lodash": "^4.17.21",
     "solid-js": "^1.8.7",
     "solid-toast": "^0.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amiralitaheri/sd-gallery.git"
   }
 }
