@@ -38,3 +38,5 @@ export const loadRendererUrl = (window, url) => {
     );
   }
 };
+
+export const ICON_PATH = `${__dirname}/../renderer/main_window/public/icons/icon`;

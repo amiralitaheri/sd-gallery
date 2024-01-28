@@ -1,3 +1,13 @@
+const { homepage, description } = require("./package.json");
+
+const makerOptions = {
+  categories: ["Graphics"],
+  genericName: "Image Organization",
+  homepage,
+  icon: "./src/public/icons/icon.png",
+  productDescription: description,
+};
+
 module.exports = {
   packagerConfig: {
     ignore: (path) => {
@@ -19,23 +29,34 @@ module.exports = {
       }
       return true;
     },
+    icon: "./src/public/icons/icon",
   },
   rebuildConfig: {},
   makers: [
     {
       name: "@electron-forge/maker-squirrel",
-      config: {},
+      config: {
+        iconUrl: `https://github.com/amiralitaheri/sd-gallery/master/src/public/icons/win/icon.ico`,
+        setupIcon: "./src/public/icons/icon.ico",
+      },
     },
     {
       name: "@electron-forge/maker-zip",
     },
     {
       name: "@electron-forge/maker-deb",
-      config: {},
+      config: {
+        options: {
+          ...makerOptions,
+          section: "graphics",
+        },
+      },
     },
     {
       name: "@electron-forge/maker-rpm",
-      config: {},
+      config: {
+        options: makerOptions,
+      },
     },
     // {
     //   name: "@electron-forge/maker-flatpak",

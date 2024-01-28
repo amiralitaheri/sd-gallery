@@ -3,7 +3,7 @@ import path from "path";
 import { setupDB } from "./database";
 import { addHandlers } from "./handlers";
 import electronSquirrelStartup from "electron-squirrel-startup";
-import { loadRendererUrl } from "./utils";
+import { ICON_PATH, loadRendererUrl } from "./utils";
 import { productName } from "../../package.json";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -26,6 +26,7 @@ const showAboutModal = () => {
     resizable: false,
     minimizable: false,
     title: `About ${productName}`,
+    icon: ICON_PATH,
   });
   modal.removeMenu();
   loadRendererUrl(modal, "/about");
@@ -49,6 +50,7 @@ const showSettingsModal = () => {
     height: width / 2,
     minimizable: false,
     title: "Settings",
+    icon: ICON_PATH,
   });
   modal.removeMenu();
   loadRendererUrl(modal, "/settings");
@@ -88,7 +90,7 @@ const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     show: false,
-
+    icon: ICON_PATH,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       webSecurity: false, // TODO: Check other alternatives for loading local resources
