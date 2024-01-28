@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, MenuItem, screen } from "electron";
+import { app, BrowserWindow, Menu, MenuItem, screen, shell } from "electron";
 import path from "path";
 import { setupDB } from "./database";
 import { addHandlers } from "./handlers";
@@ -29,6 +29,10 @@ const showAboutModal = () => {
     icon: ICON_PATH,
   });
   modal.removeMenu();
+  modal.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: "deny" };
+  });
   loadRendererUrl(modal, "/about");
   modal.once("ready-to-show", () => {
     modal.show();
