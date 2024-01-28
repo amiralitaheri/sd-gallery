@@ -30,8 +30,9 @@ export const loadRendererUrl = (window, url) => {
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     window.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}#${url}`);
   } else {
-    window.loadFile(
-      path.join(
+    window.loadURL(
+      join(
+        "file://",
         __dirname,
         `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html#${url}`,
       ),
