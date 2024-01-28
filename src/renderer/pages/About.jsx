@@ -1,10 +1,11 @@
 import { author, version, repository } from "../../../package.json";
+import icon from "../assets/icon.png";
 import styles from "./About.module.pcss";
 
 const About = () => {
   return (
     <div class={styles.container}>
-      <img src="/icons/icon.png" alt="icon" />
+      <img src={icon} alt="icon" />
       <div>
         <h1>SD Gallery {version}</h1>
         <div>
