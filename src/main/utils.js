@@ -1,4 +1,4 @@
-import path, { join, dirname } from "path";
+import { join, dirname } from "path";
 import * as child_process from "child_process";
 
 export const SUPPORTS_COPY_FILE_TO_CLIPBOARD = ["darwin", "win32"].includes(
@@ -40,4 +40,7 @@ export const loadRendererUrl = (window, url) => {
   }
 };
 
-export const ICON_PATH = `${__dirname}/../renderer/main_window/public/icons/icon`;
+export const ICON_PATH = join(
+  __dirname,
+  `/../renderer/${MAIN_WINDOW_VITE_NAME}/public/icons/icon`,
+);
