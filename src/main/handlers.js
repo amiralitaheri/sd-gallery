@@ -143,7 +143,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
   return counter;
 };
 
-const handleDeleteDirectory = (id) => {
+const handleDeleteDirectory = (event, id) => {
   const directories = new Directories();
   directories.removeDirectory(id);
 };
@@ -165,10 +165,11 @@ const syncDirectory = async (rootDirectoryId) => {
 };
 
 /**
+ * @param event
  * @param {number} [rootDirectoryId]
  * @returns {Promise<{deleted: number, added: number}>}
  */
-const handleSyncDirectories = async (rootDirectoryId) => {
+const handleSyncDirectories = async (event, rootDirectoryId) => {
   if (rootDirectoryId) {
     return syncDirectory(rootDirectoryId);
   }
@@ -187,19 +188,20 @@ const handleSyncDirectories = async (rootDirectoryId) => {
 };
 
 /**
+ * @param event
  * @param {("model"|"vae"|"seed"|"prompt"|"sampler")} [groupBy]
  * @param {modelId: number, search: string, isHidden: boolean} [filter]
  * @param {{key: ("ctimeMs"|"name"|"fileSize"|"rating"|"cfgScale"|"steps"), direction: ("asc" | "desc")}} [sort]
  * @param {string} [directoryPath]
  * @returns {*}
  */
-const handleListFiles = ({ groupBy, filter, sort, directoryPath }) => {
+const handleListFiles = (event, { groupBy, filter, sort, directoryPath }) => {
   // TODO
   const images = new Images();
   return images.getImages({ groupBy, filter, sort, directoryPath });
 };
 
-const handleGetImageAddons = (imageId) => {
+const handleGetImageAddons = (event, imageId) => {
   const images = new Images();
   return images.getImageAddons(imageId);
 };
@@ -214,7 +216,7 @@ const handleGetModels = () => {
   return models.getAllModels();
 };
 
-const handleGetModelById = (modelId) => {
+const handleGetModelById = (event, modelId) => {
   const models = new Models();
   return models.getModelById(modelId);
 };
@@ -229,17 +231,17 @@ const handleGetDirectories = () => {
   return directories.getDirectoriesTree();
 };
 
-const handleSetImageRating = ({ imageId, rating }) => {
+const handleSetImageRating = (event, { imageId, rating }) => {
   const images = new Images();
   return images.setRating({ imageId, rating });
 };
 
-const handleSetImageIsHidden = ({ imageId, isHidden }) => {
+const handleSetImageIsHidden = (event, { imageId, isHidden }) => {
   const images = new Images();
   images.setIsHidden({ imageId, isHidden });
 };
 
-const handleSetDirectoryIsHidden = ({ directoryId, isHidden }) => {
+const handleSetDirectoryIsHidden = (event, { directoryId, isHidden }) => {
   const directories = new Directories();
   directories.setIsHidden({ directoryId, isHidden });
 };
@@ -297,29 +299,21 @@ const handleSetSetting = (event, args) => updateSetting(args);
 console.log(process.versions);
 
 export const addHandlers = () => {
-  ipcMain.handle("listFiles", (event, args) => handleListFiles(args));
+  ipcMain.handle("listFiles", handleListFiles);
   ipcMain.handle("importDirectory", handleImportDirectory);
   ipcMain.handle("getSettings", handleGetSettings);
   ipcMain.handle("setSetting", handleSetSetting);
-  ipcMain.handle("getImageAddons", (event, args) => handleGetImageAddons(args));
+  ipcMain.handle("getImageAddons", handleGetImageAddons);
   ipcMain.handle("getModelsList", handleGetModelsList);
-  ipcMain.handle("setImageRating", (event, args) => handleSetImageRating(args));
-  ipcMain.handle("setImageIsHidden", (event, args) =>
-    handleSetImageIsHidden(args),
-  );
-  ipcMain.handle("setDirectoryIsHidden", (event, args) =>
-    handleSetDirectoryIsHidden(args),
-  );
+  ipcMain.handle("setImageRating", handleSetImageRating);
+  ipcMain.handle("setImageIsHidden", handleSetImageIsHidden);
+  ipcMain.handle("setDirectoryIsHidden", handleSetDirectoryIsHidden);
   ipcMain.handle("getDirectories", handleGetDirectories);
   ipcMain.handle("getModels", handleGetModels);
   ipcMain.handle("getVaes", handleGetVaes);
-  ipcMain.handle("getModelById", (event, args) => handleGetModelById(args));
-  ipcMain.handle("deleteDirectory", (event, args) =>
-    handleDeleteDirectory(args),
-  );
-  ipcMain.handle("syncDirectories", (event, args) =>
-    handleSyncDirectories(args),
-  );
+  ipcMain.handle("getModelById", handleGetModelById);
+  ipcMain.handle("deleteDirectory", handleDeleteDirectory);
+  ipcMain.handle("syncDirectories", handleSyncDirectories);
   ipcMain.on("showDirectoryContextMenu", handleShowDirectoryContextMenu);
   ipcMain.on("showImageContextMenu", handleShowImageContextMenu);
 };
