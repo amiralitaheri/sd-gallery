@@ -1,10 +1,10 @@
 import Database from "better-sqlite3";
 import { join } from "path";
 import { app } from "electron";
-import { name } from "../../../package.json";
+import { productName } from "../../../package.json";
 
 export const db = new Database(
-  join(app.getPath("appData"), name, "/database_v1.db"),
+  join(app.getPath("appData"), productName, "/database_v1.db"),
 );
 
 db.transaction(() => {
