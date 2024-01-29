@@ -28,6 +28,11 @@ jobs:
           cache: 'npm'
       - run: pip install setuptools
       - run: npm ci
-      - run: npm run publish -- --arch "x64,arm64"
+      - run: |
+          if [[ "${{ matrix.os }}" != "macos-latest" ]]; then
+          npm run publish
+          else
+          npm run publish -- --arch="x64,arm64"
+          fi
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
