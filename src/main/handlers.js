@@ -11,9 +11,7 @@ import { Images } from "./database/images";
 import { includesNsfw } from "./metadata/audit";
 import { openFileExplorer, SUPPORTS_COPY_FILE_TO_CLIPBOARD } from "./utils";
 import { writeFilePaths as writeFilePathsToClipboard } from "electron-clipboard-ex";
-
-// TODO
-const autoHideNsfw = true;
+import { settings, updateSetting } from "./settings";
 
 const isImage = (name) =>
   /\.(apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)$/gi.test(name);
@@ -92,7 +90,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
           name: entity.name,
           prompt: metadata.prompt,
           negativePrompt: metadata.negativePrompt,
-          isHidden: autoHideNsfw && includesNsfw(metadata.prompt),
+          isHidden: settings.autoHideNsfw && includesNsfw(metadata.prompt),
           fileSize: stats.size,
           fileExtension:
             metadata.FileType?.value || metadata["File Type"]?.value,
@@ -293,11 +291,16 @@ const handleShowImageContextMenu = (event, image) => {
   menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
 };
 
+const handleGetSettings = () => settings;
+const handleSetSetting = (event, args) => updateSetting(args);
+
 console.log(process.versions);
 
 export const addHandlers = () => {
   ipcMain.handle("listFiles", (event, args) => handleListFiles(args));
   ipcMain.handle("importDirectory", handleImportDirectory);
+  ipcMain.handle("getSettings", handleGetSettings);
+  ipcMain.handle("setSetting", handleSetSetting);
   ipcMain.handle("getImageAddons", (event, args) => handleGetImageAddons(args));
   ipcMain.handle("getModelsList", handleGetModelsList);
   ipcMain.handle("setImageRating", (event, args) => handleSetImageRating(args));

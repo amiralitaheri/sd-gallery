@@ -5,6 +5,7 @@ import { addHandlers } from "./handlers";
 import electronSquirrelStartup from "electron-squirrel-startup";
 import { ICON_PATH, loadRendererUrl } from "./utils";
 import { productName } from "../../package.json";
+import { loadSettings } from "./settings";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (electronSquirrelStartup) {
@@ -60,6 +61,7 @@ const showSettingsModal = () => {
   loadRendererUrl(modal, "/settings");
   modal.once("ready-to-show", () => {
     modal.show();
+    modal.webContents.openDevTools();
   });
 };
 
@@ -109,6 +111,7 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   setupDB();
+  loadSettings();
   addHandlers();
   createApplicationMenu();
   createWindow();

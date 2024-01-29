@@ -4,10 +4,12 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("sdGalleryApi", {
   importDirectory: () => ipcRenderer.invoke("importDirectory"),
+  getSettings: () => ipcRenderer.invoke("getSettings"),
+  setSetting: ({ key, value }) =>
+    ipcRenderer.invoke("setSetting", { key, value }),
   listFiles: ({ groupBy, filter, sort, directoryPath }) =>
     ipcRenderer.invoke("listFiles", { groupBy, filter, sort, directoryPath }),
   getImageAddons: (imageId) => ipcRenderer.invoke("getImageAddons", imageId),
-  getModelsList: () => ipcRenderer.invoke("getImageAddons"),
   setImageRating: ({ imageId, rating }) =>
     ipcRenderer.invoke("setImageRating", { imageId, rating }),
   setImageIsHidden: ({ imageId, isHidden }) =>
