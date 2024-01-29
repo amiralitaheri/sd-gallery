@@ -9,9 +9,13 @@ import { Directories } from "./database/directories";
 import { Addons } from "./database/addons";
 import { Images } from "./database/images";
 import { includesNsfw } from "./metadata/audit";
-import { openFileExplorer, SUPPORTS_COPY_FILE_TO_CLIPBOARD } from "./utils";
-import { writeFilePaths as writeFilePathsToClipboard } from "electron-clipboard-ex";
+import { openFileExplorer } from "./utils";
 import { settings, updateSetting } from "./settings";
+
+let writeFilePathsToClipboard;
+try {
+  writeFilePathsToClipboard = require("electron-clipboard-ex").writeFilePaths;
+} catch (er) {}
 
 const isImage = (name) =>
   /\.(apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)$/gi.test(name);
@@ -282,7 +286,7 @@ const handleShowImageContextMenu = (event, image) => {
         openFileExplorer(image.path);
       },
     },
-    SUPPORTS_COPY_FILE_TO_CLIPBOARD && {
+    writeFilePathsToClipboard && {
       label: "Copy",
       click: () => {
         writeFilePathsToClipboard([image.path]);
