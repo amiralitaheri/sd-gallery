@@ -26,6 +26,7 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+      - run: pip install setuptools
       - run: npm ci
       - run: npm run publish -- --arch "x64,arm64"
     env:
