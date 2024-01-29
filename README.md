@@ -1,4 +1,4 @@
-<div style="text-align: center">
+<div align="center">
 
 <img alt="icon" src="https://raw.githubusercontent.com/amiralitaheri/sd-gallery/master/src/public/icons/icon.png" width=20% height=20%>
 
