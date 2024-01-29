@@ -132,19 +132,19 @@ export class Images {
   getImages({ filter, sort, directoryPath }) {
     const selectAllImageQuery = db.prepare(
       `SELECT *
-     FROM image
-     WHERE (modelId = @modelId OR @modelId IS NULL)
-       AND (isHidden = @isHidden OR @isHidden IS NULL)
-       AND (prompt LIKE @promptLike OR @promptLike IS NULL)
-       AND (path LIKE @directoryPathLike OR @directoryPathLike IS NULL)
-     ORDER BY ${sort?.key || "id"} ${sort?.direction || "ASC"};`,
+             FROM image
+             WHERE (modelId = @modelId OR @modelId IS NULL)
+               AND (isHidden = @isHidden OR @isHidden IS NULL)
+               AND (prompt LIKE @promptLike OR @promptLike IS NULL)
+               AND (path LIKE @directoryPathLike OR @directoryPathLike IS NULL)
+             ORDER BY ${sort?.key || "id"} ${sort?.direction || "ASC"};`,
     );
     return selectAllImageQuery.all({
       modelId: filter?.modelId,
       isHidden:
         filter?.isHidden === false ? 0 : filter?.isHidden === true ? 1 : null,
-      promptLike: filter?.search && ` %${filter.search} % `,
-      directoryPathLike: directoryPath && `${directoryPath}${sep} % `,
+      promptLike: filter?.search && `%${filter.search}%`,
+      directoryPathLike: directoryPath && `${directoryPath}${sep}%`,
       sortKey: sort?.key || "id",
     });
   }
