@@ -3,9 +3,8 @@
 <img alt="icon" src="https://raw.githubusercontent.com/amiralitaheri/sd-gallery/master/src/public/icons/icon.png" width=20% height=20%>
 
 # SD Gallery
-
-![GitHub Release](https://img.shields.io/github/v/release/amiralitaheri/sd-gallery)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/amiralitaheri/sd-gallery/total)
+[![GitHub Release](https://img.shields.io/github/v/release/amiralitaheri/sd-gallery)](https://github.com/amiralitaheri/sd-gallery/releases/latest)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/amiralitaheri/sd-gallery/total)](https://github.com/amiralitaheri/sd-gallery/releases/latest)
 
 An image gallery for AI generated images.
 
