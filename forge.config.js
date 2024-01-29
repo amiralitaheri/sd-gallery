@@ -1,4 +1,4 @@
-const { homepage, description } = require("./package.json");
+const { homepage, description, name, productName } = require("./package.json");
 
 const makerOptions = {
   categories: ["Graphics"],
@@ -10,6 +10,7 @@ const makerOptions = {
 
 module.exports = {
   packagerConfig: {
+    executableName: process.platform === "linux" ? name : productName,
     ignore: (path) => {
       if (!path) {
         return false;
