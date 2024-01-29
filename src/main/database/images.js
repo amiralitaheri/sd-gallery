@@ -60,26 +60,6 @@ const getImagesByRootDirectoryIdQuery = db.prepare(
   "SELECT id, path FROM image WHERE rootDirectoryId = @rootDirectoryId",
 );
 
-const selectAllImageQueryAsc = db.prepare(
-  `SELECT *
-     FROM image
-     WHERE (modelId = @modelId OR @modelId IS NULL)
-       AND (isHidden = @isHidden OR @isHidden IS NULL)
-       AND (prompt LIKE @promptLike OR @promptLike IS NULL)
-       AND (path LIKE @directoryPathLike OR @directoryPathLike IS NULL)
-     ORDER BY @sortKey;`,
-);
-
-const selectAllImageQueryDesc = db.prepare(
-  `SELECT *
-     FROM image
-     WHERE (modelId = @modelId OR @modelId IS NULL)
-       AND (isHidden = @isHidden OR @isHidden IS NULL)
-       AND (prompt LIKE @promptLike OR @promptLike IS NULL)
-       AND (path LIKE @directoryPathLike OR @directoryPathLike IS NULL)
-     ORDER BY @sortKey DESC;`,
-);
-
 const updateImageRatingQuery = db.prepare(
   "UPDATE image SET rating = @rating WHERE id = @imageId",
 );
@@ -150,17 +130,16 @@ export class Images {
   }
 
   getImages({ filter, sort, directoryPath }) {
-    if (sort?.direction === "desc") {
-      return selectAllImageQueryDesc.all({
-        modelId: filter?.modelId,
-        isHidden:
-          filter?.isHidden === false ? 0 : filter?.isHidden === true ? 1 : null,
-        promptLike: filter?.search && ` %${filter.search} % `,
-        directoryPathLike: directoryPath && `${directoryPath}${sep} % `,
-        sortKey: sort?.key || "id",
-      });
-    }
-    return selectAllImageQueryAsc.all({
+    const selectAllImageQuery = db.prepare(
+      `SELECT *
+     FROM image
+     WHERE (modelId = @modelId OR @modelId IS NULL)
+       AND (isHidden = @isHidden OR @isHidden IS NULL)
+       AND (prompt LIKE @promptLike OR @promptLike IS NULL)
+       AND (path LIKE @directoryPathLike OR @directoryPathLike IS NULL)
+     ORDER BY ${sort?.key || "id"} ${sort?.direction || "ASC"};`,
+    );
+    return selectAllImageQuery.all({
       modelId: filter?.modelId,
       isHidden:
         filter?.isHidden === false ? 0 : filter?.isHidden === true ? 1 : null,
