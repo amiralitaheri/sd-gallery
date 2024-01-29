@@ -18,10 +18,8 @@ const FilterInput = (props) => {
 
     const sort = {};
 
-    if (sortRef.value) {
-      sort.key = sortRef.value;
-      sort.direction = sortDirectionRef.value;
-    }
+    sort.key = sortRef.value;
+    sort.direction = sortDirectionRef.value;
 
     updateParams({ filter, sort });
     updateImages();
