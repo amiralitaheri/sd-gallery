@@ -3,9 +3,9 @@ import { db } from "./index";
 const insertVaeQuery = db.prepare(
   "INSERT INTO vae (name, hash) VALUES (@name, @hash)",
 );
-const deleteVaeQuery = db.prepare("DELETE FROM vae where id = @id");
+const deleteVaeQuery = db.prepare("DELETE FROM vae WHERE id = @id");
 
-const selectAllVaeQuery = db.prepare("SELECT * From vae");
+const selectAllVaeQuery = db.prepare("SELECT * FROM vae");
 
 export class Vaes {
   constructor() {

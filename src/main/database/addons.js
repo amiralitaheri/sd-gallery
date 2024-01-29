@@ -1,11 +1,12 @@
 import { db } from "./index";
 
 const insertAddonQuery = db.prepare(
-  "INSERT INTO addon (name, hash, type) VALUES (@name, @hash, @type)",
+  `INSERT INTO addon (name, hash, type)
+     VALUES (@name, @hash, @type)`,
 );
-const deleteAddonQuery = db.prepare("DELETE FROM addon where id = @id");
+const deleteAddonQuery = db.prepare("DELETE FROM addon WHERE id = @id");
 
-const selectAllAddonQuery = db.prepare("SELECT * From addon");
+const selectAllAddonQuery = db.prepare("SELECT * FROM addon");
 
 export class Addons {
   constructor() {

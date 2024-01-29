@@ -4,7 +4,7 @@ import { dirname, sep } from "path";
 const insertDirectoryQuery = db.prepare(
   "INSERT INTO directory (name, path, isRoot, rootDirectoryId) VALUES (@name, @path, @isRoot, @rootDirectoryId)",
 );
-const deleteDirectoryQuery = db.prepare("DELETE FROM directory where id = @id");
+const deleteDirectoryQuery = db.prepare("DELETE FROM directory WHERE id = @id");
 const selectAllDirectoryQuery = db.prepare("SELECT * FROM directory");
 const getDirectoryByPathQuery = db.prepare(
   "SELECT * FROM directory WHERE path = @path",

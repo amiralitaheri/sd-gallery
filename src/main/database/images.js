@@ -3,57 +3,55 @@ import * as fs from "fs";
 import { sep } from "path";
 
 const insertImageQuery = db.prepare(
-  `INSERT INTO image (
-    name,
-    prompt,
-    negativePrompt,
-    isHidden,
-    fileSize,
-    fileExtension,
-    width,
-    height,
-    cfgScale,
-    steps,
-    path,
-    seed,
-    ctimeMs,
-    clipSkip,
-    rootDirectoryId,
-    modelId,
-    vaeId,
-    sampler) 
-    VALUES (
-    @name,
-    @prompt,
-    @negativePrompt,
-    @isHidden,
-    @fileSize,
-    @fileExtension,
-    @width,
-    @height,
-    @cfgScale,
-    @steps,
-    @path,
-    @seed,
-    @ctimeMs,
-    @clipSkip,
-    @rootDirectoryId,
-    @modelId,
-    @vaeId,
-    @sampler)`,
+  `INSERT INTO image (name,
+                        prompt,
+                        negativePrompt,
+                        isHidden,
+                        fileSize,
+                        fileExtension,
+                        width,
+                        height,
+                        cfgScale,
+                        steps,
+                        path,
+                        seed,
+                        ctimeMs,
+                        clipSkip,
+                        rootDirectoryId,
+                        modelId,
+                        vaeId,
+                        sampler)
+     VALUES (@name,
+             @prompt,
+             @negativePrompt,
+             @isHidden,
+             @fileSize,
+             @fileExtension,
+             @width,
+             @height,
+             @cfgScale,
+             @steps,
+             @path,
+             @seed,
+             @ctimeMs,
+             @clipSkip,
+             @rootDirectoryId,
+             @modelId,
+             @vaeId,
+             @sampler)`,
 );
 
-const deleteImageQuery = db.prepare("DELETE FROM image where id = @id");
+const deleteImageQuery = db.prepare("DELETE FROM image WHERE id = @id");
 
 const insertAddonRelationQuery = db.prepare(
   "INSERT INTO image_addon (imageId, addonId, value) VALUES (@imageId, @addonId, @value)",
 );
 
 const getImageAddonsQuery = db.prepare(
-  "SELECT name, type, value, hash\n" +
-    "FROM image_addon\n" +
-    "         LEFT JOIN addon ON addonId = addon.id\n" +
-    "WHERE imageId = @imageId;",
+  `SELECT name, type, value, hash
+     FROM image_addon
+              LEFT JOIN addon ON addonId = addon.id
+     WHERE imageId = @imageId;`,
 );
 
 const getImageById = db.prepare("SELECT * FROM image WHERE id=@id");
@@ -63,29 +61,31 @@ const getImagesByRootDirectoryIdQuery = db.prepare(
 );
 
 const selectAllImageQueryAsc = db.prepare(
-  "SELECT * From image " +
-    "WHERE (modelId=@modelId OR @modelId IS NULL) AND" +
-    " (isHidden=@isHidden OR @isHidden IS NULL) AND" +
-    " (prompt like @promptLike OR @promptLike IS NULL) AND" +
-    " (path like @directoryPathLike OR @directoryPathLike IS NULL)" +
-    " ORDER BY @sortKey ASC;",
+  `SELECT *
+     FROM image
+     WHERE (modelId = @modelId OR @modelId IS NULL)
+       AND (isHidden = @isHidden OR @isHidden IS NULL)
+       AND (prompt LIKE @promptLike OR @promptLike IS NULL)
+       AND (path LIKE @directoryPathLike OR @directoryPathLike IS NULL)
+     ORDER BY @sortKey;`,
 );
 
 const selectAllImageQueryDesc = db.prepare(
-  "SELECT * From image " +
-    "WHERE modelId=@modelId OR @modelId IS NULL AND" +
-    " (isHidden=@isHidden OR @isHidden IS NULL) AND" +
-    " (prompt like @promptLike OR @promptLike IS NULL) AND" +
-    " (path like @directoryPathLike OR @directoryPathLike IS NULL)" +
-    " ORDER BY @sortKey DESC;",
+  `SELECT *
+     FROM image
+     WHERE (modelId = @modelId OR @modelId IS NULL)
+       AND (isHidden = @isHidden OR @isHidden IS NULL)
+       AND (prompt LIKE @promptLike OR @promptLike IS NULL)
+       AND (path LIKE @directoryPathLike OR @directoryPathLike IS NULL)
+     ORDER BY @sortKey DESC;`,
 );
 
 const updateImageRatingQuery = db.prepare(
-  "UPDATE image set rating = @rating where id = @imageId",
+  "UPDATE image SET rating = @rating WHERE id = @imageId",
 );
 
 const updateImageIsHiddenQuery = db.prepare(
-  "UPDATE image set isHidden = @isHidden where id = @imageId",
+  "UPDATE image SET isHidden = @isHidden WHERE id = @imageId",
 );
 
 export class Images {
@@ -155,8 +155,8 @@ export class Images {
         modelId: filter?.modelId,
         isHidden:
           filter?.isHidden === false ? 0 : filter?.isHidden === true ? 1 : null,
-        promptLike: filter?.search && `%${filter.search}%`,
-        directoryPathLike: directoryPath && `${directoryPath}${sep}%`,
+        promptLike: filter?.search && ` %${filter.search} % `,
+        directoryPathLike: directoryPath && `${directoryPath}${sep} % `,
         sortKey: sort?.key || "id",
       });
     }
@@ -164,8 +164,8 @@ export class Images {
       modelId: filter?.modelId,
       isHidden:
         filter?.isHidden === false ? 0 : filter?.isHidden === true ? 1 : null,
-      promptLike: filter?.search && `%${filter.search}%`,
-      directoryPathLike: directoryPath && `${directoryPath}${sep}%`,
+      promptLike: filter?.search && ` %${filter.search} % `,
+      directoryPathLike: directoryPath && `${directoryPath}${sep} % `,
       sortKey: sort?.key || "id",
     });
   }

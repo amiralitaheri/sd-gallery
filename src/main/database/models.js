@@ -3,9 +3,9 @@ import { db } from "./index";
 const insertModelQuery = db.prepare(
   "INSERT INTO model (name, hash) VALUES (@name, @hash)",
 );
-const deleteModelQuery = db.prepare("DELETE FROM model where id = @id");
+const deleteModelQuery = db.prepare("DELETE FROM model WHERE id = @id");
 
-const selectAllModelQuery = db.prepare("SELECT * From model");
+const selectAllModelQuery = db.prepare("SELECT * FROM model");
 
 const selectModelByIdQuery = db.prepare("SELECT * FROM model WHERE id=@id");
 

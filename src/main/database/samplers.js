@@ -3,9 +3,9 @@ import { db } from "./index";
 const insertSamplerQuery = db.prepare(
   "INSERT INTO sampler (name) VALUES (@name)",
 );
-const deleteSamplerQuery = db.prepare("DELETE FROM sampler where name = @name");
+const deleteSamplerQuery = db.prepare("DELETE FROM sampler WHERE name = @name");
 
-const selectAllSamplerQuery = db.prepare("SELECT * From sampler");
+const selectAllSamplerQuery = db.prepare("SELECT * FROM sampler");
 
 const insetSampler = ({ name }) => {
   const result = insertSamplerQuery.run({ name });
