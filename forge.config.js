@@ -36,7 +36,7 @@ module.exports = {
     {
       name: "@electron-forge/maker-squirrel",
       config: {
-        iconUrl: `https://github.com/amiralitaheri/sd-gallery/master/src/public/icons/win/icon.ico`,
+        iconUrl: `https://raw.githubusercontent.com/amiralitaheri/sd-gallery/master/src/public/icons/icon.ico`,
         setupIcon: "./src/public/icons/icon.ico",
       },
     },
