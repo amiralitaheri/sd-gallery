@@ -29,3 +29,9 @@ Download the latest version for your os from [Releases](https://github.com/amira
 
 ## Screenshot
 ![screenshot](screenshots/1.png)
+
+## Alternative Projects
+Here are some alternatives in case you aren't intrested in this app 😢
+- [Breadboard](https://github.com/cocktailpeanut/breadboard)
+- [DiffusionToolkit](https://github.com/RupertAvery/DiffusionToolkit)
+- [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
