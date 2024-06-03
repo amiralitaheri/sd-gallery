@@ -1,7 +1,7 @@
 {
   "name": "sd-gallery",
   "productName": "SD Gallery",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "description": "An image gallery for AI generated images.",
   "homepage": "https://github.com/amiralitaheri/sd-gallery",
   "main": ".vite/build/main.js",
