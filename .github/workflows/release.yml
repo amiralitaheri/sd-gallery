@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-      - run: pip install setuptools
+      - run: pip install setuptools==69.5.1
       - run: npm ci
       - run: npm run publish
       - name: Build macos arm
