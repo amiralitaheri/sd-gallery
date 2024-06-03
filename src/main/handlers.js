@@ -95,6 +95,11 @@ const processFilesInDirectory = async (path, rootId = null) => {
 
       let imageId;
 
+      // FIXME: Should this be here? Why the prompt is an object, Should we display it differently in UI?
+      if (typeof metadata.prompt === "object") {
+        metadata.prompt = JSON.stringify(metadata.prompt);
+      }
+
       try {
         imageId = images.addImage({
           name: entity.name,
