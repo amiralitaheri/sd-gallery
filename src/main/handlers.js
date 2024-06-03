@@ -28,7 +28,12 @@ const handleImportDirectory = async (event) => {
     properties: ["openDirectory"],
   });
   if (!dir) return 0;
-  return await processFilesInDirectory(dir[0]);
+  try {
+    return await processFilesInDirectory(dir[0]);
+  } catch (e) {
+    log.error(e);
+    throw e;
+  }
 };
 
 const processFilesInDirectory = async (path, rootId = null) => {
@@ -117,7 +122,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
           continue;
         }
         console.error(e);
-        log.error(e);
+        log.error(e, { entity });
       }
       counter++;
 
@@ -138,7 +143,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
               });
             } catch (e) {
               if (e.code !== "SQLITE_CONSTRAINT_PRIMARYKEY") {
-                log.error(e);
+                log.error(e, { resource });
               }
             }
           }
@@ -161,12 +166,18 @@ const handleDeleteDirectory = (event, id) => {
 const syncDirectory = async (rootDirectoryId) => {
   const directories = new Directories();
   const images = new Images();
-  const deleted = images.removeDeletedImagesFromDirectory(rootDirectoryId);
+  let added = 0,
+    deleted = 0;
+  try {
+    deleted = images.removeDeletedImagesFromDirectory(rootDirectoryId);
 
-  const added = await processFilesInDirectory(
-    directories.getDirectoryPathById(rootDirectoryId),
-  );
-
+    added = await processFilesInDirectory(
+      directories.getDirectoryPathById(rootDirectoryId),
+    );
+  } catch (e) {
+    log.error(e, { rootDirectoryId });
+    throw e;
+  }
   return { added, deleted };
 };
 
