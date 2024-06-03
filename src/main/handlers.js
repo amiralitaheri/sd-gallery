@@ -113,11 +113,11 @@ const processFilesInDirectory = async (path, rootId = null) => {
           rootDirectoryId: rootId || directoryId,
         });
       } catch (e) {
-        console.error(e);
-        log.error(e);
         if (e.code === "SQLITE_CONSTRAINT_UNIQUE") {
           continue;
         }
+        console.error(e);
+        log.error(e);
       }
       counter++;
 
