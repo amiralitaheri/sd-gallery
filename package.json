@@ -40,6 +40,7 @@
   "dependencies": {
     "@solidjs/router": "^0.10.10",
     "better-sqlite3": "^9.2.2",
+    "electron-log": "^5.1.5",
     "electron-squirrel-startup": "^1.0.0",
     "exifreader": "^4.17.0",
     "lodash": "^4.17.21",
