@@ -11,6 +11,7 @@ import { Images } from "./database/images";
 import { includesNsfw } from "./metadata/audit";
 import { openFileExplorer } from "./utils";
 import { settings, updateSetting } from "./settings";
+import log from "electron-log/main";
 
 let writeFilePathsToClipboard;
 try {
@@ -136,7 +137,7 @@ const processFilesInDirectory = async (path, rootId = null) => {
               });
             } catch (e) {
               if (e.code !== "SQLITE_CONSTRAINT_PRIMARYKEY") {
-                throw e;
+                log.error(e);
               }
             }
           }
