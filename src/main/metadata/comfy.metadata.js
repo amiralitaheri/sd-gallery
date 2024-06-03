@@ -27,7 +27,7 @@ function cleanBadJson(str) {
 }
 
 export const comfyMetadataProcessor = createMetadataProcessor({
-  canParse: (exif) => exif.prompt && exif.workflow,
+  canParse: (exif) => exif.prompt || exif.workflow,
   parse: (exif) => {
     const prompt = JSON.parse(cleanBadJson(exif.prompt));
     const samplerNodes = [];
@@ -51,6 +51,9 @@ export const comfyMetadataProcessor = createMetadataProcessor({
       }
 
       if (node.class_type === "KSampler") samplerNodes.push(node.inputs);
+
+      if (node.class_type === "KSampler (Efficient)")
+        samplerNodes.push(node.inputs);
 
       if (node.class_type === "LoraLoader") {
         // Ignore lora nodes with strength 0
@@ -82,7 +85,7 @@ export const comfyMetadataProcessor = createMetadataProcessor({
         (x) => x.latent_image.class_type === "EmptyLatentImage",
       ) ?? samplerNodes[0];
 
-    const workflow = JSON.parse(exif.workflow);
+    const workflow = exif.workflow ? JSON.parse(exif.workflow) : undefined;
     const versionIds = [];
     const modelIds = [];
     if (workflow?.extra) {
@@ -120,12 +123,6 @@ export const comfyMetadataProcessor = createMetadataProcessor({
       comfy: JSON.stringify({ prompt, workflow }),
     };
 
-    // Handle control net apply
-    if (initialSamplerNode.positive.class_type === "ControlNetApply") {
-      const conditioningNode = initialSamplerNode.positive.inputs.conditioning;
-      metadata.prompt = conditioningNode.inputs.text;
-    }
-
     // Map to automatic1111 terms for compatibility
     a1111Compatability(metadata);
 
@@ -156,17 +153,26 @@ function a1111Compatability(metadata) {
   }
 }
 
-function getPromptText(node) {
+function getPromptText(node, target = "positive") {
+  if (!node) return "";
+  if (node.class_type === "ControlNetApply")
+    return getPromptText(node.inputs.conditioning, target);
+
+  // Handle wildcard nodes
+  if (node.inputs?.populated_text)
+    node.inputs.text = node.inputs.populated_text;
+
   if (node.inputs?.text) {
     if (typeof node.inputs.text === "string") return node.inputs.text;
     if (typeof node.inputs.text.class_type !== "undefined")
-      return getPromptText(node.inputs.text);
+      return getPromptText(node.inputs.text, target);
   }
   if (node.inputs?.text_g) {
     if (!node.inputs?.text_l || node.inputs?.text_l === node.inputs?.text_g)
       return node.inputs.text_g;
     return `${node.inputs.text_g}, ${node.inputs.text_l}`;
   }
+  if (node.inputs?.[`text_${target}`]) return node.inputs[`text_${target}`];
   return "";
 }
 
