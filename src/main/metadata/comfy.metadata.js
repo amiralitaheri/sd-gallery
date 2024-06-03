@@ -50,6 +50,9 @@ export const comfyMetadataProcessor = createMetadataProcessor({
         samplerNodes.push(simplifiedNode);
       }
 
+      if (node.class_type === "KSamplerAdvanced //Inspire")
+        samplerNodes.push(node.inputs);
+
       if (node.class_type === "KSampler") samplerNodes.push(node.inputs);
 
       if (node.class_type === "KSampler (Efficient)")
@@ -102,14 +105,14 @@ export const comfyMetadataProcessor = createMetadataProcessor({
     }
 
     const metadata = {
-      prompt: getPromptText(initialSamplerNode.positive),
-      negativePrompt: getPromptText(initialSamplerNode.negative),
-      cfgScale: initialSamplerNode.cfg,
-      steps: initialSamplerNode.steps,
-      seed: initialSamplerNode.seed,
-      sampler: initialSamplerNode.sampler_name,
-      scheduler: initialSamplerNode.scheduler,
-      denoise: initialSamplerNode.denoise,
+      prompt: getPromptText(initialSamplerNode?.positive, "positive"),
+      negativePrompt: getPromptText(initialSamplerNode?.negative, "negative"),
+      cfgScale: getSelectorValue(initialSamplerNode, "cfg"),
+      steps: getSelectorValue(initialSamplerNode, "steps"),
+      seed: getSelectorValue(initialSamplerNode, "seed"),
+      sampler: getSelectorValue(initialSamplerNode, "sampler_name"),
+      scheduler: getSelectorValue(initialSamplerNode, "scheduler"),
+      denoise: getSelectorValue(initialSamplerNode, "denoise"),
       width: initialSamplerNode.latent_image.inputs.width,
       height: initialSamplerNode.latent_image.inputs.height,
       models,
@@ -174,6 +177,13 @@ function getPromptText(node, target = "positive") {
   }
   if (node.inputs?.[`text_${target}`]) return node.inputs[`text_${target}`];
   return "";
+}
+
+function getSelectorValue(input, key) {
+  if (input[key]?.class_type === "Selector") {
+    return input[key].inputs[key];
+  }
+  return input[key];
 }
 
 function getNumberValue(input) {
