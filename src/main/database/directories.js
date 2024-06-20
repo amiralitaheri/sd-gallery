@@ -1,26 +1,5 @@
-import { db } from "./index";
+import { getDB } from "./index";
 import { dirname, sep } from "path";
-
-const insertDirectoryQuery = db.prepare(
-  "INSERT INTO directory (name, path, isRoot, rootDirectoryId) VALUES (@name, @path, @isRoot, @rootDirectoryId)",
-);
-const deleteDirectoryQuery = db.prepare("DELETE FROM directory WHERE id = @id");
-const selectAllDirectoryQuery = db.prepare("SELECT * FROM directory");
-const getDirectoryByPathQuery = db.prepare(
-  "SELECT * FROM directory WHERE path = @path",
-);
-
-const getDirectoryByIdQuery = db.prepare(
-  "SELECT * FROM directory WHERE id = @id",
-);
-
-const getRootDirectoriesQuery = db.prepare(
-  "SELECT * FROM directory WHERE isRoot = 1",
-);
-
-const updateDirectoryIsHiddenQuery = db.prepare(
-  "UPDATE directory SET isHidden = @isHidden WHERE id = @directoryId",
-);
 
 export class Directories {
   constructor() {
@@ -28,6 +7,29 @@ export class Directories {
     if (Directories.instance) {
       return Directories.instance;
     }
+
+    this._insertDirectoryQuery = getDB().prepare(
+      "INSERT INTO directory (name, path, isRoot, rootDirectoryId) VALUES (@name, @path, @isRoot, @rootDirectoryId)",
+    );
+    this._deleteDirectoryQuery = getDB().prepare(
+      "DELETE FROM directory WHERE id = @id",
+    );
+    this._selectAllDirectoryQuery = getDB().prepare("SELECT * FROM directory");
+    this._getDirectoryByPathQuery = getDB().prepare(
+      "SELECT * FROM directory WHERE path = @path",
+    );
+
+    this._getDirectoryByIdQuery = getDB().prepare(
+      "SELECT * FROM directory WHERE id = @id",
+    );
+
+    this._getRootDirectoriesQuery = getDB().prepare(
+      "SELECT * FROM directory WHERE isRoot = 1",
+    );
+
+    this._updateDirectoryIsHiddenQuery = getDB().prepare(
+      "UPDATE directory SET isHidden = @isHidden WHERE id = @directoryId",
+    );
 
     // Save the instance in a static property
     Directories.instance = this;
@@ -37,9 +39,9 @@ export class Directories {
   }
 
   addDirectory({ name, path, rootDirectoryId }) {
-    const directory = getDirectoryByPathQuery.get({ path });
+    const directory = this._getDirectoryByPathQuery.get({ path });
     if (!directory?.id) {
-      const result = insertDirectoryQuery.run({
+      const result = this._insertDirectoryQuery.run({
         name,
         path,
         isRoot: rootDirectoryId ? 0 : 1,
@@ -52,28 +54,28 @@ export class Directories {
   }
 
   getDirectoryPathById(id) {
-    const directory = getDirectoryByIdQuery.get({ id });
+    const directory = this._getDirectoryByIdQuery.get({ id });
     return directory?.path;
   }
 
   getRootDirectories() {
-    return getRootDirectoriesQuery.all();
+    return this._getRootDirectoriesQuery.all();
   }
 
   removeDirectory(id) {
-    deleteDirectoryQuery.run({ id });
+    this._deleteDirectoryQuery.run({ id });
     // Should I delete models, addons , vaes
   }
 
   setIsHidden({ directoryId, isHidden }) {
-    updateDirectoryIsHiddenQuery.run({
+    this._updateDirectoryIsHiddenQuery.run({
       directoryId,
       isHidden: isHidden ? 1 : 0,
     });
   }
 
   getDirectoriesTree() {
-    const rows = selectAllDirectoryQuery.all();
+    const rows = this._selectAllDirectoryQuery.all();
     const directoriesTree = [];
 
     const insertToTree = (row, treeNode) => {

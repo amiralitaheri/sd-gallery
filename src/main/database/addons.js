@@ -1,12 +1,4 @@
-import { db } from "./index";
-
-const insertAddonQuery = db.prepare(
-  `INSERT INTO addon (name, hash, type)
-     VALUES (@name, @hash, @type)`,
-);
-const deleteAddonQuery = db.prepare("DELETE FROM addon WHERE id = @id");
-
-const selectAllAddonQuery = db.prepare("SELECT * FROM addon");
+import { getDB } from "./index";
 
 export class Addons {
   constructor() {
@@ -17,6 +9,15 @@ export class Addons {
 
     this._addonsNameToIdMap = new Map();
 
+    this._insertAddonQuery = getDB().prepare(
+      `INSERT INTO addon (name, hash, type)
+     VALUES (@name, @hash, @type)`,
+    );
+    this._deleteAddonQuery = getDB().prepare(
+      "DELETE FROM addon WHERE id = @id",
+    );
+
+    const selectAllAddonQuery = getDB().prepare("SELECT * FROM addon");
     const rows = selectAllAddonQuery.all();
     for (const row of rows) {
       this._addonsNameToIdMap.set(row.id, row.name);
@@ -31,7 +32,7 @@ export class Addons {
 
   addAddon({ name, hash, type }) {
     if (!this._addonsNameToIdMap.has(name)) {
-      const result = insertAddonQuery.run({ name, hash, type });
+      const result = this._insertAddonQuery.run({ name, hash, type });
       const id = result.lastInsertRowid;
       this._addonsNameToIdMap.set(name, id);
       return id;
@@ -41,7 +42,7 @@ export class Addons {
 
   removeAddon({ name }) {
     if (this._addonsNameToIdMap.has(name)) {
-      deleteAddonQuery.run({ id: this._addonsNameToIdMap.get(name) });
+      this._deleteAddonQuery.run({ id: this._addonsNameToIdMap.get(name) });
       this._addonsNameToIdMap.delete(name);
       return true;
     }

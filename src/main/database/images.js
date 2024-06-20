@@ -1,9 +1,16 @@
-import { db } from "./index";
+import { getDB } from "./index";
 import * as fs from "fs";
 import { sep } from "path";
 
-const insertImageQuery = db.prepare(
-  `INSERT INTO image (name,
+export class Images {
+  constructor() {
+    // Check if an instance already exists
+    if (Images.instance) {
+      return Images.instance;
+    }
+
+    this._insertImageQuery = getDB().prepare(
+      `INSERT INTO image (name,
                         prompt,
                         negativePrompt,
                         isHidden,
@@ -39,41 +46,36 @@ const insertImageQuery = db.prepare(
              @modelId,
              @vaeId,
              @sampler)`,
-);
+    );
 
-const deleteImageQuery = db.prepare("DELETE FROM image WHERE id = @id");
+    this._deleteImageQuery = getDB().prepare(
+      "DELETE FROM image WHERE id = @id",
+    );
 
-const insertAddonRelationQuery = db.prepare(
-  "INSERT INTO image_addon (imageId, addonId, value) VALUES (@imageId, @addonId, @value)",
-);
+    this._insertAddonRelationQuery = getDB().prepare(
+      "INSERT INTO image_addon (imageId, addonId, value) VALUES (@imageId, @addonId, @value)",
+    );
 
-const getImageAddonsQuery = db.prepare(
-  `SELECT name, type, value, hash
+    this._getImageAddonsQuery = getDB().prepare(
+      `SELECT name, type, value, hash
      FROM image_addon
               LEFT JOIN addon ON addonId = addon.id
      WHERE imageId = @imageId;`,
-);
+    );
 
-const getImageById = db.prepare("SELECT * FROM image WHERE id=@id");
+    this._getImageById = getDB().prepare("SELECT * FROM image WHERE id=@id");
 
-const getImagesByRootDirectoryIdQuery = db.prepare(
-  "SELECT id, path FROM image WHERE rootDirectoryId = @rootDirectoryId",
-);
+    this._getImagesByRootDirectoryIdQuery = getDB().prepare(
+      "SELECT id, path FROM image WHERE rootDirectoryId = @rootDirectoryId",
+    );
 
-const updateImageRatingQuery = db.prepare(
-  "UPDATE image SET rating = @rating WHERE id = @imageId",
-);
+    this._updateImageRatingQuery = getDB().prepare(
+      "UPDATE image SET rating = @rating WHERE id = @imageId",
+    );
 
-const updateImageIsHiddenQuery = db.prepare(
-  "UPDATE image SET isHidden = @isHidden WHERE id = @imageId",
-);
-
-export class Images {
-  constructor() {
-    // Check if an instance already exists
-    if (Images.instance) {
-      return Images.instance;
-    }
+    this._updateImageIsHiddenQuery = getDB().prepare(
+      "UPDATE image SET isHidden = @isHidden WHERE id = @imageId",
+    );
 
     // Save the instance in a static property
     Images.instance = this;
@@ -102,7 +104,7 @@ export class Images {
     vaeId,
     clipSkip,
   }) {
-    const result = insertImageQuery.run({
+    const result = this._insertImageQuery.run({
       name,
       prompt,
       negativePrompt,
@@ -126,11 +128,11 @@ export class Images {
   }
 
   removeImage(id) {
-    deleteImageQuery.run({ id });
+    this._deleteImageQuery.run({ id });
   }
 
   getImages({ filter, sort, directoryPath }) {
-    const selectAllImageQuery = db.prepare(
+    const selectAllImageQuery = getDB().prepare(
       `SELECT *
              FROM image
              WHERE (modelId = @modelId OR @modelId IS NULL)
@@ -150,28 +152,30 @@ export class Images {
   }
 
   getImageAddons(imageId) {
-    return getImageAddonsQuery.all({ imageId });
+    return this._getImageAddonsQuery.all({ imageId });
   }
 
   addAddonRelation({ imageId, addonId, value }) {
-    insertAddonRelationQuery.run({ imageId, addonId, value });
+    this._insertAddonRelationQuery.run({ imageId, addonId, value });
   }
 
   setRating({ imageId, rating }) {
-    updateImageRatingQuery.run({ imageId, rating });
-    return getImageById.get({ id: imageId });
+    this._updateImageRatingQuery.run({ imageId, rating });
+    return this._getImageById.get({ id: imageId });
   }
 
   setIsHidden({ imageId, isHidden }) {
-    updateImageIsHiddenQuery.run({ imageId, isHidden: isHidden ? 1 : 0 });
+    this._updateImageIsHiddenQuery.run({ imageId, isHidden: isHidden ? 1 : 0 });
   }
 
   removeDeletedImagesFromDirectory(rootDirectoryId) {
-    const images = getImagesByRootDirectoryIdQuery.all({ rootDirectoryId });
+    const images = this._getImagesByRootDirectoryIdQuery.all({
+      rootDirectoryId,
+    });
     let counter = 0;
     for (const image of images) {
       if (!fs.existsSync(image.path)) {
-        deleteImageQuery.run({ id: image.id });
+        this._deleteImageQuery.run({ id: image.id });
         counter++;
       }
     }
