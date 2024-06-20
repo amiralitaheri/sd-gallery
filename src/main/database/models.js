@@ -1,21 +1,4 @@
-import { db } from "./index";
-
-const insertModelQuery = db.prepare(
-  "INSERT INTO model (name, hash) VALUES (@name, @hash)",
-);
-const deleteModelQuery = db.prepare("DELETE FROM model WHERE id = @id");
-
-const selectAllModelQuery = db.prepare("SELECT * FROM model");
-
-const selectModelByIdQuery = db.prepare("SELECT * FROM model WHERE id=@id");
-
-const insetModel = ({ name, hash }) => {
-  const result = insertModelQuery.run({ name, hash });
-  return result.lastInsertRowid;
-};
-const deleteModel = (id) => {
-  deleteModelQuery.run({ id });
-};
+import { getDB } from "./index";
 
 export class Models {
   constructor() {
@@ -24,9 +7,22 @@ export class Models {
       return Models.instance;
     }
 
+    this._insertModelQuery = getDB().prepare(
+      "INSERT INTO model (name, hash) VALUES (@name, @hash)",
+    );
+    this._deleteModelQuery = getDB().prepare(
+      "DELETE FROM model WHERE id = @id",
+    );
+
+    this._selectAllModelQuery = getDB().prepare("SELECT * FROM model");
+
+    this._selectModelByIdQuery = getDB().prepare(
+      "SELECT * FROM model WHERE id=@id",
+    );
+
     this._modelsNameToIdMap = new Map();
 
-    const rows = selectAllModelQuery.all();
+    const rows = this._selectAllModelQuery.all();
     for (const row of rows) {
       this._modelsNameToIdMap.set(row.id, row.name);
     }
@@ -38,9 +34,17 @@ export class Models {
     return this;
   }
 
+  _insertModel({ name, hash }) {
+    const result = this._insertModelQuery.run({ name, hash });
+    return result.lastInsertRowid;
+  }
+  _deleteModel(id) {
+    this._deleteModelQuery.run({ id });
+  }
+
   addModel({ name, hash }) {
     if (!this._modelsNameToIdMap.has(name)) {
-      const id = insetModel({ name, hash });
+      const id = this._insertModel({ name, hash });
       this._modelsNameToIdMap.set(name, id);
       return id;
     }
@@ -49,7 +53,7 @@ export class Models {
 
   removeModel({ name, hash }) {
     if (this._modelsNameToIdMap.has(name)) {
-      deleteModel(this._modelsNameToIdMap.get(name));
+      this._deleteModel(this._modelsNameToIdMap.get(name));
       this._modelsNameToIdMap.delete(name);
       return true;
     }
@@ -61,11 +65,11 @@ export class Models {
   }
 
   getAllModels() {
-    return selectAllModelQuery.all();
+    return this._selectAllModelQuery.all();
   }
 
   getModelById(id) {
-    return selectModelByIdQuery.get({ id });
+    return this._selectModelByIdQuery.get({ id });
   }
 
   getModelsArray() {

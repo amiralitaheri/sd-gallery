@@ -1,11 +1,4 @@
-import { db } from "./index";
-
-const insertVaeQuery = db.prepare(
-  "INSERT INTO vae (name, hash) VALUES (@name, @hash)",
-);
-const deleteVaeQuery = db.prepare("DELETE FROM vae WHERE id = @id");
-
-const selectAllVaeQuery = db.prepare("SELECT * FROM vae");
+import { getDB } from "./index";
 
 export class Vaes {
   constructor() {
@@ -14,9 +7,16 @@ export class Vaes {
       return Vaes.instance;
     }
 
+    this._insertVaeQuery = getDB().prepare(
+      "INSERT INTO vae (name, hash) VALUES (@name, @hash)",
+    );
+    this._deleteVaeQuery = getDB().prepare("DELETE FROM vae WHERE id = @id");
+
+    this._selectAllVaeQuery = getDB().prepare("SELECT * FROM vae");
+
     this._vaesNameToIdMap = new Map();
 
-    const rows = selectAllVaeQuery.all();
+    const rows = this._selectAllVaeQuery.all();
     for (const row of rows) {
       this._vaesNameToIdMap.set(row.id, row.name);
     }
@@ -30,7 +30,7 @@ export class Vaes {
 
   addVae({ name, hash }) {
     if (!this._vaesNameToIdMap.has(name)) {
-      const result = insertVaeQuery.run({ name, hash });
+      const result = this._insertVaeQuery.run({ name, hash });
       const id = result.lastInsertRowid;
       this._vaesNameToIdMap.set(name, id);
       return id;
@@ -40,7 +40,7 @@ export class Vaes {
 
   removeVae({ name, hash }) {
     if (this._vaesNameToIdMap.has(name)) {
-      deleteVaeQuery.run({ id: this._vaesNameToIdMap.get(name) });
+      this._deleteVaeQuery.run({ id: this._vaesNameToIdMap.get(name) });
       this._vaesNameToIdMap.delete(name);
       return true;
     }
@@ -48,7 +48,7 @@ export class Vaes {
   }
 
   getAllVaes() {
-    return selectAllVaeQuery.all();
+    return this._selectAllVaeQuery.all();
   }
 
   getVaeId({ name, hash }) {

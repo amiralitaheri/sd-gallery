@@ -3,12 +3,16 @@ import { join } from "path";
 import { app } from "electron";
 import { productName } from "../../../package.json";
 
-export const db = new Database(
-  join(app.getPath("appData"), productName, "/database_v1.db"),
-);
+let db;
 
-db.transaction(() => {
-  db.exec(`
+export const getDB = () => db;
+
+export const setupDB = () => {
+  db = new Database(
+    join(app.getPath("appData"), productName, "/database_v1.db"),
+  );
+  db.transaction(() => {
+    db.exec(`
         PRAGMA foreign_keys = ON;
 
         CREATE TABLE IF NOT EXISTS model
@@ -89,6 +93,5 @@ db.transaction(() => {
             FOREIGN KEY (addonId) REFERENCES addon (id) ON DELETE CASCADE
         );
     `);
-})();
-
-export const setupDB = () => {};
+  })();
+};

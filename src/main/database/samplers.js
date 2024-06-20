@@ -1,19 +1,4 @@
-import { db } from "./index";
-
-const insertSamplerQuery = db.prepare(
-  "INSERT INTO sampler (name) VALUES (@name)",
-);
-const deleteSamplerQuery = db.prepare("DELETE FROM sampler WHERE name = @name");
-
-const selectAllSamplerQuery = db.prepare("SELECT * FROM sampler");
-
-const insetSampler = ({ name }) => {
-  const result = insertSamplerQuery.run({ name });
-  return result.lastInsertRowid;
-};
-const deleteSampler = (name) => {
-  deleteSamplerQuery.run({ name });
-};
+import { getDB } from "./index";
 
 export class Samplers {
   constructor() {
@@ -21,6 +6,15 @@ export class Samplers {
     if (Samplers.instance) {
       return Samplers.instance;
     }
+
+    this._insertSamplerQuery = getDB().prepare(
+      "INSERT INTO sampler (name) VALUES (@name)",
+    );
+    this._deleteSamplerQuery = getDB().prepare(
+      "DELETE FROM sampler WHERE name = @name",
+    );
+
+    const selectAllSamplerQuery = getDB().prepare("SELECT * FROM sampler");
 
     this._samplersNameArray = [];
 
@@ -36,9 +30,17 @@ export class Samplers {
     return this;
   }
 
+  _insetSampler({ name }) {
+    const result = this._insertSamplerQuery.run({ name });
+    return result.lastInsertRowid;
+  }
+  _deleteSampler(name) {
+    this._deleteSamplerQuery.run({ name });
+  }
+
   addSampler({ name }) {
     if (!this._samplersNameArray.includes(name)) {
-      insetSampler({ name });
+      this._insetSampler({ name });
       this._samplersNameArray.push(name);
     }
     return name;
@@ -46,7 +48,7 @@ export class Samplers {
 
   removeSampler({ name }) {
     if (this._samplersNameArray.includes(name)) {
-      deleteSampler(name);
+      this._deleteSampler(name);
       this._samplersNameArray = this._samplersNameArray.filter(
         (n) => n !== name,
       );
