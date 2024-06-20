@@ -5,6 +5,7 @@ import { readFileSync, writeFileSync, existsSync } from "fs";
 
 let settings = {
   autoHideNsfw: true,
+  minFileSize: 2048,
 };
 
 const settingsFilePath = join(

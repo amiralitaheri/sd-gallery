@@ -27,6 +27,23 @@ const Settings = () => {
             checked={settings().autoHideNsfw}
           />
         </div>
+        <div>
+          <label>Ignore images smaller than X byte</label>
+          <input
+            value={settings().minFileSize}
+            type="number"
+            onChange={async (event) => {
+              await window.sdGalleryApi.setSetting({
+                key: "minFileSize",
+                value: event.target.value,
+              });
+              mutate((prev) => ({
+                ...prev,
+                minFileSize: event.target.value,
+              }));
+            }}
+          />
+        </div>
       </Show>
     </div>
   );

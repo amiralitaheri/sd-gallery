@@ -72,6 +72,8 @@ const processFilesInDirectory = async (path, rootId = null) => {
       }
       const stats = await stat(entityPath);
 
+      if (stats.size < settings.minFileSize) continue;
+
       const metadata = await getMetadata(entityPath);
       let sampler, modelId, vaeId;
 

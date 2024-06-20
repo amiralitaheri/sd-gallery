@@ -61,7 +61,6 @@ const showSettingsModal = () => {
   loadRendererUrl(modal, "/settings");
   modal.once("ready-to-show", () => {
     modal.show();
-    modal.webContents.openDevTools();
   });
 };
 
